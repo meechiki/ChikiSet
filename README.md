@@ -4,6 +4,10 @@ A single-file HTML workout tracker: log sets and reps, run a rest timer, and
 build your own training-day schedule (e.g. a 5-day split) with per-date
 history.
 
+วิธีเปิดใช้งาน
+คอม (Windows/Mac): หาไฟล์ workout-tracker.html ในโฟลเดอร์ Downloads แล้วดับเบิลคลิก — มันจะเปิดในเบราว์เซอร์ (Chrome/Edge/Safari) อัตโนมัติ ใช้ได้เลย
+มือถือ (Android/iOS): เปิดแอป Files แล้วแตะไฟล์ → เลือก "เปิดด้วย" Chrome หรือ Safari
+
 **Note:** Unofficial personal tool. Not a substitute for coaching or medical
 advice — adjust weights and volume to your own condition.
 
