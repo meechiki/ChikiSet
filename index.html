@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ChikiSet — ตารางออกกำลังกาย & Set Tracker</title>
+<title>ChikiSet — ตารางออกกำลังกาย & Interactive Muscle Map</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  /* Soft Cloud Light Palette (Default) */
+  /* Soft Cloud Light Palette */
   --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-  --panel-bg: rgba(255, 255, 255, 0.75);
+  --panel-bg: rgba(255, 255, 255, 0.8);
   --panel-solid: #ffffff;
-  --panel-sub: rgba(241, 245, 249, 0.8);
+  --panel-sub: rgba(241, 245, 249, 0.85);
   --border-color: rgba(255, 255, 255, 0.8);
-  --border-line: rgba(226, 232, 240, 0.8);
+  --border-line: rgba(226, 232, 240, 0.85);
   
   --text-main: #0f172a;
   --text-muted: #64748b;
@@ -25,14 +25,19 @@
   --accent-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   --accent-orange: #ff5e3a;
   --accent-orange-grad: linear-gradient(135deg, #ff7e5f 0%, #ff5e3a 100%);
-  --accent-subtle: rgba(99, 102, 241, 0.1);
+  --accent-subtle: rgba(99, 102, 241, 0.12);
   --accent-glow: rgba(99, 102, 241, 0.25);
+  
+  --muscle-fill: rgba(99, 102, 241, 0.15);
+  --muscle-stroke: #6366f1;
+  --muscle-active-fill: rgba(255, 94, 58, 0.4);
+  --muscle-active-stroke: #ff5e3a;
   
   --good-green: #10b981;
   --good-bg: rgba(16, 185, 129, 0.1);
   
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
-  --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
   --shadow-lg: 0 20px 30px -10px rgba(15, 23, 42, 0.12);
   
   --glass-blur: blur(16px);
@@ -46,9 +51,9 @@
 
 [data-theme="dark"] {
   --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  --panel-bg: rgba(30, 41, 59, 0.7);
+  --panel-bg: rgba(30, 41, 59, 0.75);
   --panel-solid: #1e293b;
-  --panel-sub: rgba(15, 23, 42, 0.6);
+  --panel-sub: rgba(15, 23, 42, 0.65);
   --border-color: rgba(255, 255, 255, 0.08);
   --border-line: rgba(51, 65, 85, 0.6);
   
@@ -58,6 +63,8 @@
   
   --accent-primary: #818cf8;
   --accent-subtle: rgba(129, 140, 248, 0.15);
+  --muscle-fill: rgba(129, 140, 248, 0.2);
+  --muscle-stroke: #818cf8;
   --shadow-md: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
 }
 
@@ -79,7 +86,6 @@ body {
   color: #ffffff;
 }
 
-/* Glassmorphism Header */
 header {
   position: sticky;
   top: 0;
@@ -99,7 +105,7 @@ header {
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
-  max-width: 960px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -123,11 +129,6 @@ header {
   font-size: 20px;
   box-shadow: 0 6px 16px rgba(255, 94, 58, 0.3);
   transform: rotate(-3deg);
-  transition: var(--transition-smooth);
-}
-
-.logo-group:hover .logo-badge {
-  transform: rotate(0deg) scale(1.05);
 }
 
 h1 {
@@ -158,9 +159,7 @@ h1 span {
   gap: 10px;
 }
 
-.search-wrap {
-  position: relative;
-}
+.search-wrap { position: relative; }
 
 .search {
   background: var(--panel-sub);
@@ -210,12 +209,11 @@ h1 span {
 .icon-btn:hover {
   background: var(--panel-solid);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
 }
 
-/* Main Navigation Tabs */
+/* Nav & Tabs */
 .nav-wrap {
-  max-width: 960px;
+  max-width: 1200px;
   margin: 14px auto 0;
 }
 
@@ -239,24 +237,19 @@ h1 span {
   gap: 6px;
 }
 
-.main-tab:hover {
-  color: var(--text-main);
-}
-
 .main-tab.active {
   color: var(--accent-primary);
   font-weight: 600;
   border-bottom-color: var(--accent-primary);
 }
 
-/* Category Filter Chips */
 .tabs {
   display: flex;
   gap: 8px;
   overflow-x: auto;
   padding: 12px 0 6px;
   scrollbar-width: none;
-  max-width: 960px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -277,12 +270,6 @@ h1 span {
   transition: var(--transition-smooth);
 }
 
-.tab:hover {
-  background: var(--panel-solid);
-  color: var(--text-main);
-  transform: translateY(-1px);
-}
-
 .tab.active {
   background: var(--accent-gradient);
   border-color: transparent;
@@ -291,11 +278,27 @@ h1 span {
   box-shadow: 0 4px 12px var(--accent-glow);
 }
 
-/* Page Layout Wrapper */
+/* Main Split Layout */
 .wrap {
-  max-width: 960px;
+  max-width: 1200px;
   margin: 24px auto 0;
   padding: 0 20px;
+}
+
+.split-container {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media(max-width: 900px) {
+  .split-container {
+    grid-template-columns: 1fr;
+  }
+  .anatomy-panel {
+    order: -1;
+  }
 }
 
 .view { display: none; animation: fadeIn 0.3s ease; }
@@ -306,7 +309,109 @@ h1 span {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Cards & Section Headers */
+/* Anatomy Interactive Map Widget */
+.anatomy-panel {
+  position: sticky;
+  top: 140px;
+  background: var(--panel-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  transition: var(--transition-smooth);
+}
+
+.anatomy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.anatomy-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.view-toggle {
+  display: flex;
+  background: var(--panel-sub);
+  padding: 3px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-line);
+}
+
+.toggle-btn {
+  font-family: 'Kanit', sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.toggle-btn.active {
+  background: var(--panel-solid);
+  color: var(--accent-primary);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.anatomy-svg-wrap {
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.muscle-path {
+  fill: var(--muscle-fill);
+  stroke: var(--muscle-stroke);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.muscle-path:hover {
+  fill: rgba(255, 94, 58, 0.3);
+  stroke: #ff5e3a;
+  filter: drop-shadow(0 0 6px rgba(255, 94, 58, 0.4));
+}
+
+.muscle-path.active {
+  fill: var(--muscle-active-fill);
+  stroke: var(--muscle-active-stroke);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 8px rgba(255, 94, 58, 0.6));
+}
+
+.active-muscle-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-orange-grad);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(255, 94, 58, 0.3);
+}
+
+/* Cards & Set Lists */
 .cat-title {
   font-size: 16px;
   font-weight: 600;
@@ -315,7 +420,6 @@ h1 span {
   display: flex;
   align-items: center;
   gap: 12px;
-  letter-spacing: 0.02em;
 }
 
 .cat-title::after {
@@ -330,7 +434,6 @@ h1 span {
 .ex-card {
   background: var(--panel-bg);
   backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   margin-bottom: 12px;
@@ -353,25 +456,8 @@ h1 span {
   gap: 12px;
 }
 
-.ex-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-.ex-eq {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 1px;
-  font-weight: 400;
-}
-
-.ex-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: none;
-}
+.ex-name { font-size: 15px; font-weight: 600; color: var(--text-main); }
+.ex-eq { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
 
 .set-count {
   font-family: 'JetBrains Mono', monospace;
@@ -383,16 +469,8 @@ h1 span {
   border-radius: var(--radius-full);
 }
 
-.chevron {
-  color: var(--text-light);
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  font-size: 12px;
-}
-
-.ex-card.open .chevron {
-  transform: rotate(180deg);
-  color: var(--accent-primary);
-}
+.chevron { color: var(--text-light); transition: transform 0.2s; font-size: 12px; }
+.ex-card.open .chevron { transform: rotate(180deg); color: var(--accent-primary); }
 
 .ex-body {
   display: none;
@@ -402,11 +480,6 @@ h1 span {
 }
 
 .ex-card.open .ex-body { display: block; animation: slideDown 0.25s ease; }
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 
 .set-labels {
   display: grid;
@@ -418,7 +491,6 @@ h1 span {
   margin-top: 14px;
   padding: 0 4px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .set-row {
@@ -427,7 +499,6 @@ h1 span {
   gap: 10px;
   align-items: center;
   margin-top: 8px;
-  animation: fadeIn 0.2s ease;
 }
 
 .set-row .idx {
@@ -463,25 +534,14 @@ h1 span {
   color: var(--text-light);
   font-size: 18px;
   cursor: pointer;
-  width: 32px;
-  height: 32px;
+  width: 32px; height: 32px;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition-smooth);
+  display: flex; align-items: center; justify-content: center;
 }
 
-.del-set:hover {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
-}
+.del-set:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
 
-.ex-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
-}
+.ex-actions { display: flex; gap: 10px; margin-top: 14px; }
 
 .btn-mini {
   font-family: 'Kanit', sans-serif;
@@ -493,16 +553,7 @@ h1 span {
   border: 1px solid var(--border-line);
   background: var(--panel-solid);
   color: var(--text-main);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
   transition: var(--transition-smooth);
-}
-
-.btn-mini:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-  border-color: var(--accent-primary);
 }
 
 .btn-mini.accent {
@@ -511,21 +562,6 @@ h1 span {
   color: #ffffff;
   font-weight: 600;
   box-shadow: 0 4px 12px var(--accent-glow);
-}
-
-.btn-mini.accent:hover {
-  box-shadow: 0 6px 16px var(--accent-glow);
-}
-
-.btn-mini.ghost {
-  background: transparent;
-  border-color: transparent;
-  color: var(--text-muted);
-}
-
-.btn-mini.ghost:hover {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.08);
 }
 
 .empty {
@@ -538,27 +574,20 @@ h1 span {
   border-radius: var(--radius-lg);
 }
 
-/* Schedule & Day Cards */
+/* Schedule Tab UI */
 .sched-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 12px; flex-wrap: wrap;
 }
 
-.new-day-form {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-  max-width: 480px;
-}
+.new-day-form { display: flex; gap: 10px; width: 100%; max-width: 480px; }
 
 .new-day-form input {
   flex: 1;
   background: var(--panel-bg);
-  backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: 10px 16px;
@@ -566,13 +595,6 @@ h1 span {
   font-family: 'Kanit', sans-serif;
   font-size: 14px;
   outline: none;
-  transition: var(--transition-smooth);
-}
-
-.new-day-form input:focus {
-  background: var(--panel-solid);
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px var(--accent-subtle);
 }
 
 .day-card {
@@ -583,11 +605,6 @@ h1 span {
   margin-bottom: 16px;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  transition: var(--transition-smooth);
-}
-
-.day-card:hover {
-  box-shadow: var(--shadow-md);
 }
 
 .day-head {
@@ -599,50 +616,16 @@ h1 span {
   gap: 12px;
 }
 
-.day-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-main);
-}
+.day-name { font-size: 18px; font-weight: 600; color: var(--text-main); }
+.day-sub { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
 
-.day-sub {
-  font-size: 12.5px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
+.day-del { background: none; border: none; color: var(--text-light); font-size: 16px; cursor: pointer; padding: 6px; }
+.day-del:hover { color: #ef4444; }
 
-.day-del {
-  background: none;
-  border: none;
-  color: var(--text-light);
-  font-size: 16px;
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 8px;
-  transition: var(--transition-smooth);
-}
-
-.day-del:hover {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
-}
-
-.day-body {
-  display: none;
-  padding: 0 22px 22px;
-  border-top: 1px solid var(--border-line);
-  background: var(--panel-sub);
-}
-
+.day-body { display: none; padding: 0 22px 22px; border-top: 1px solid var(--border-line); background: var(--panel-sub); }
 .day-card.open .day-body { display: block; }
 
-.date-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 18px 0;
-  flex-wrap: wrap;
-}
+.date-row { display: flex; align-items: center; gap: 12px; margin: 18px 0; flex-wrap: wrap; }
 
 .date-row input[type="date"] {
   background: var(--panel-solid);
@@ -652,15 +635,9 @@ h1 span {
   padding: 7px 12px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 13.5px;
-  outline: none;
 }
 
-.history-chips {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin: 12px 0 6px;
-}
+.history-chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0 6px; }
 
 .chip {
   font-family: 'JetBrains Mono', monospace;
@@ -671,18 +648,12 @@ h1 span {
   padding: 4px 10px;
   border-radius: var(--radius-full);
   cursor: pointer;
-  transition: var(--transition-smooth);
 }
 
-.chip:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
 .chip.today { border-color: var(--good-green); color: var(--good-green); background: var(--good-bg); }
 .chip.active { background: var(--accent-primary); border-color: var(--accent-primary); color: #ffffff; }
 
-.streak-strip {
-  display: flex;
-  gap: 6px;
-  margin-top: 18px;
-}
+.streak-strip { display: flex; gap: 6px; margin-top: 18px; }
 
 .streak-day {
   flex: 1;
@@ -694,26 +665,18 @@ h1 span {
   border-radius: var(--radius-sm);
   background: var(--panel-solid);
   border: 1px solid var(--border-line);
-  transition: var(--transition-smooth);
 }
 
-.streak-day.hit {
-  background: var(--accent-subtle);
-  border-color: var(--accent-primary);
-  color: var(--accent-primary);
-  font-weight: 700;
-}
+.streak-day.hit { background: var(--accent-subtle); border-color: var(--accent-primary); color: var(--accent-primary); font-weight: 700; }
 
 /* Modal Exercise Picker */
 .picker-overlay {
   display: none;
-  position: fixed;
-  inset: 0;
+  position: fixed; inset: 0;
   background: rgba(15, 23, 42, 0.4);
   backdrop-filter: blur(8px);
   z-index: 100;
-  align-items: center;
-  justify-content: center;
+  align-items: center; justify-content: center;
   padding: 20px;
 }
 
@@ -723,42 +686,14 @@ h1 span {
   background: var(--panel-solid);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  width: 100%;
-  max-width: 480px;
-  padding: 22px;
-  max-height: 80vh;
-  overflow-y: auto;
+  width: 100%; max-width: 480px;
+  padding: 22px; max-height: 80vh; overflow-y: auto;
   box-shadow: var(--shadow-lg);
 }
 
-.picker-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-}
-
-.picker-head h3 {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-.picker-close {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 22px;
-  cursor: pointer;
-  border-radius: 8px;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.picker-close:hover { background: var(--panel-sub); color: var(--text-main); }
+.picker-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.picker-head h3 { font-size: 18px; font-weight: 600; color: var(--text-main); }
+.picker-close { background: none; border: none; color: var(--text-muted); font-size: 22px; cursor: pointer; }
 
 .picker-search {
   width: 100%;
@@ -773,182 +708,59 @@ h1 span {
   outline: none;
 }
 
-.pick-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 6px;
-  border-bottom: 1px solid var(--border-line);
-  font-size: 14px;
-}
-
-.pick-item .p-cat {
-  font-size: 11px;
-  color: var(--text-muted);
-}
+.pick-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 6px; border-bottom: 1px solid var(--border-line); font-size: 14px; }
+.pick-item .p-cat { font-size: 11px; color: var(--text-muted); }
 
 .pick-add {
   background: var(--panel-sub);
   border: 1px solid var(--border-line);
   color: var(--text-main);
   border-radius: var(--radius-sm);
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition-smooth);
+  padding: 6px 12px; font-size: 12px; cursor: pointer;
 }
 
-.pick-add:hover {
-  background: var(--accent-primary);
-  border-color: var(--accent-primary);
-  color: #ffffff;
-}
+.pick-add:hover { background: var(--accent-primary); color: #fff; }
 
-/* Floating Rest Timer (Flixo FAB Widget) */
+/* Rest Timer Widget */
 .timer-fab {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 60;
+  position: fixed; right: 24px; bottom: 24px; z-index: 60;
   background: var(--panel-solid);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 18px;
-  width: 220px;
+  padding: 18px; width: 220px;
   box-shadow: var(--shadow-lg);
   backdrop-filter: var(--glass-blur);
   transition: var(--transition-smooth);
 }
 
-.timer-fab.collapsed {
-  width: auto;
-  padding: 12px 18px;
-  border-radius: var(--radius-full);
-  cursor: pointer;
-}
-
+.timer-fab.collapsed { width: auto; padding: 12px 18px; border-radius: var(--radius-full); cursor: pointer; }
 .timer-fab.collapsed .timer-full { display: none; }
 
 .timer-collapsed-label {
   display: none;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--accent-orange);
-  align-items: center;
-  gap: 8px;
+  font-size: 13.5px; font-weight: 600; color: var(--accent-orange);
+  align-items: center; gap: 8px;
 }
 
 .timer-fab.collapsed .timer-collapsed-label { display: flex; }
 
-.timer-label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-}
+.timer-label { font-size: 12px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.timer-label button { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; }
 
-.timer-label button {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 4px;
-  padding: 0 4px;
-}
+.dial-wrap { display: flex; justify-content: center; margin: 10px 0 12px; position: relative; }
+.dial-num { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 700; color: var(--text-main); }
 
-.dial-wrap {
-  display: flex;
-  justify-content: center;
-  margin: 10px 0 12px;
-  position: relative;
-}
-
-.dial-num {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-main);
-}
-
-.presets {
-  display: flex;
-  gap: 4px;
-  justify-content: center;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-}
-
-.preset-btn {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  background: var(--panel-sub);
-  border: 1px solid var(--border-line);
-  color: var(--text-muted);
-  padding: 4px 8px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: var(--transition-smooth);
-}
-
-.preset-btn.active {
-  background: var(--accent-subtle);
-  border-color: var(--accent-primary);
-  color: var(--accent-primary);
-  font-weight: 600;
-}
+.presets { display: flex; gap: 4px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; }
+.preset-btn { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--panel-sub); border: 1px solid var(--border-line); color: var(--text-muted); padding: 4px 8px; border-radius: 6px; cursor: pointer; }
+.preset-btn.active { background: var(--accent-subtle); border-color: var(--accent-primary); color: var(--accent-primary); font-weight: 600; }
 
 .timer-controls { display: flex; gap: 8px; }
+.timer-controls button { flex: 1; font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 13px; border-radius: var(--radius-sm); padding: 8px 0; cursor: pointer; border: 1px solid var(--border-line); background: var(--panel-sub); color: var(--text-main); }
+.timer-controls .start { background: var(--accent-orange-grad); border-color: transparent; color: #ffffff; box-shadow: 0 4px 12px rgba(255, 94, 58, 0.3); }
 
-.timer-controls button {
-  flex: 1;
-  font-family: 'Kanit', sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  border-radius: var(--radius-sm);
-  padding: 8px 0;
-  cursor: pointer;
-  border: 1px solid var(--border-line);
-  background: var(--panel-sub);
-  color: var(--text-main);
-  transition: var(--transition-smooth);
-}
+footer { max-width: 1200px; margin: 40px auto 0; padding: 0 20px; color: var(--text-muted); font-size: 12px; text-align: center; }
 
-.timer-controls .start {
-  background: var(--accent-orange-grad);
-  border-color: transparent;
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(255, 94, 58, 0.3);
-}
-
-footer {
-  max-width: 960px;
-  margin: 40px auto 0;
-  padding: 0 20px;
-  color: var(--text-muted);
-  font-size: 12px;
-  line-height: 1.6;
-  text-align: center;
-}
-
-@media(max-width: 640px) {
-  header { padding: 14px 16px 0; }
-  h1 { font-size: 22px; }
-  .search { width: 100%; }
-  .search:focus { width: 100%; }
-  .timer-fab { right: 16px; bottom: 16px; width: 200px; }
-}
 </style>
 </head>
 <body>
@@ -982,7 +794,92 @@ footer {
 </header>
 
 <div class="wrap">
-  <div class="view active" id="view-library"></div>
+  <div class="view active" id="view-library">
+    <div class="split-container">
+      <div id="library-list-col"></div>
+      
+      <!-- Interactive Muscle Anatomy Sidebar Card -->
+      <div class="anatomy-panel">
+        <div class="anatomy-header">
+          <div class="anatomy-title"><span>🧍‍♂️</span> จิ้มเลือกกล้ามเนื้อ</div>
+          <div class="view-toggle">
+            <button class="toggle-btn active" id="btnFront">ด้านหน้า</button>
+            <button class="toggle-btn" id="btnBack">ด้านหลัง</button>
+          </div>
+        </div>
+
+        <div class="anatomy-svg-wrap">
+          <!-- Front Body Vector SVG -->
+          <svg id="svgFront" viewBox="0 0 200 380" width="100%" height="auto">
+            <!-- Head & Neck -->
+            <ellipse cx="100" cy="35" rx="22" ry="26" fill="var(--panel-sub)" stroke="var(--border-line)" stroke-width="1.5"/>
+            <path d="M92 60 L108 60 L108 72 L92 72 Z" fill="var(--panel-sub)" stroke="var(--border-line)" stroke-width="1.5"/>
+            
+            <!-- Shoulders (ไหล่) -->
+            <path class="muscle-path" data-cat="ไหล่ (Shoulders)" d="M60 75 Q72 70 88 74 L84 100 Q65 98 56 86 Z" title="ไหล่ (Shoulders)"/>
+            <path class="muscle-path" data-cat="ไหล่ (Shoulders)" d="M140 75 Q128 70 112 74 L116 100 Q135 98 144 86 Z" title="ไหล่ (Shoulders)"/>
+
+            <!-- Chest (อก) -->
+            <path class="muscle-path" data-cat="อก (Chest)" d="M86 76 L98 76 L98 110 L75 106 Q72 90 86 76 Z" title="อก (Chest)"/>
+            <path class="muscle-path" data-cat="อก (Chest)" d="M114 76 L102 76 L102 110 L125 106 Q128 90 114 76 Z" title="อก (Chest)"/>
+
+            <!-- Biceps (ไบเซ็ป) -->
+            <path class="muscle-path" data-cat="ไบเซ็ป (Biceps)" d="M54 90 Q62 98 56 128 L46 124 Q44 102 54 90 Z" title="ไบเซ็ป (Biceps)"/>
+            <path class="muscle-path" data-cat="ไบเซ็ป (Biceps)" d="M146 90 Q138 98 144 128 L154 124 Q156 102 146 90 Z" title="ไบเซ็ป (Biceps)"/>
+
+            <!-- Forearms (ปลายแขน) -->
+            <path class="muscle-path" data-cat="ปลายแขน (Forearms)" d="M46 130 L54 132 L48 175 L38 168 Z" title="ปลายแขน (Forearms)"/>
+            <path class="muscle-path" data-cat="ปลายแขน (Forearms)" d="M154 130 L146 132 L152 175 L162 168 Z" title="ปลายแขน (Forearms)"/>
+
+            <!-- Abs / Core (แกนกลางลำตัว) -->
+            <path class="muscle-path" data-cat="แกนกลางลำตัว (Abs/Core)" d="M78 112 L122 112 L118 165 L82 165 Z" title="แกนกลางลำตัว (Abs/Core)"/>
+
+            <!-- Quads (ต้นขาหน้า) -->
+            <path class="muscle-path" data-cat="ต้นขาหน้า (Quads)" d="M74 172 L96 172 L92 250 L68 245 Q64 205 74 172 Z" title="ต้นขาหน้า (Quads)"/>
+            <path class="muscle-path" data-cat="ต้นขาหน้า (Quads)" d="M126 172 L104 172 L108 250 L132 245 Q136 205 126 172 Z" title="ต้นขาหน้า (Quads)"/>
+
+            <!-- Calves Front (น่อง) -->
+            <path class="muscle-path" data-cat="น่อง (Calves)" d="M68 260 L90 260 L86 330 L72 325 Z" title="น่อง (Calves)"/>
+            <path class="muscle-path" data-cat="น่อง (Calves)" d="M132 260 L110 260 L114 330 L128 325 Z" title="น่อง (Calves)"/>
+          </svg>
+
+          <!-- Back Body Vector SVG -->
+          <svg id="svgBack" viewBox="0 0 200 380" width="100%" height="auto" style="display:none;">
+            <!-- Head Back -->
+            <ellipse cx="100" cy="35" rx="22" ry="26" fill="var(--panel-sub)" stroke="var(--border-line)" stroke-width="1.5"/>
+            
+            <!-- Traps & Upper Back (หลัง) -->
+            <path class="muscle-path" data-cat="หลัง (Back)" d="M75 70 L125 70 L138 120 L100 155 L62 120 Z" title="หลัง (Back)"/>
+            
+            <!-- Shoulders Back -->
+            <path class="muscle-path" data-cat="ไหล่ (Shoulders)" d="M58 75 Q72 70 82 74 L78 100 Q60 96 54 84 Z" title="ไหล่ (Shoulders)"/>
+            <path class="muscle-path" data-cat="ไหล่ (Shoulders)" d="M142 75 Q128 70 118 74 L122 100 Q140 96 146 84 Z" title="ไหล่ (Shoulders)"/>
+
+            <!-- Triceps (ไตรเซ็ป) -->
+            <path class="muscle-path" data-cat="ไตรเซ็ป (Triceps)" d="M52 88 Q60 96 54 126 L44 122 Q42 100 52 88 Z" title="ไตรเซ็ป (Triceps)"/>
+            <path class="muscle-path" data-cat="ไตรเซ็ป (Triceps)" d="M148 88 Q140 96 146 126 L156 122 Q158 100 148 88 Z" title="ไตรเซ็ป (Triceps)"/>
+
+            <!-- Glutes (สะโพก) -->
+            <path class="muscle-path" data-cat="สะโพก (Glutes)" d="M64 160 L98 160 L96 205 L66 198 Z" title="สะโพก (Glutes)"/>
+            <path class="muscle-path" data-cat="สะโพก (Glutes)" d="M136 160 L102 160 L104 205 L134 198 Z" title="สะโพก (Glutes)"/>
+
+            <!-- Hamstrings (ต้นขาหลัง) -->
+            <path class="muscle-path" data-cat="ต้นขาหลัง (Hamstrings)" d="M66 210 L96 210 L92 255 L68 250 Z" title="ต้นขาหลัง (Hamstrings)"/>
+            <path class="muscle-path" data-cat="ต้นขาหลัง (Hamstrings)" d="M134 210 L104 210 L108 255 L132 250 Z" title="ต้นขาหลัง (Hamstrings)"/>
+
+            <!-- Calves Back (น่อง) -->
+            <path class="muscle-path" data-cat="น่อง (Calves)" d="M68 262 L90 262 L85 330 L72 325 Z" title="น่อง (Calves)"/>
+            <path class="muscle-path" data-cat="น่อง (Calves)" d="M132 262 L110 262 L115 330 L128 325 Z" title="น่อง (Calves)"/>
+          </svg>
+        </div>
+
+        <div id="activeMuscleBadge" class="active-muscle-badge">
+          <span>🎯</span> <span id="activeMuscleText">เลือกหมวดหมู่ทั้งหมด</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="view" id="view-schedule"></div>
 </div>
 
@@ -1150,7 +1047,7 @@ document.querySelectorAll('.main-tab').forEach(t=>{
 
 /* ================= LIBRARY VIEW ================= */
 const tabsEl = document.getElementById('tabs');
-const libView = document.getElementById('view-library');
+const libView = document.getElementById('library-list-col');
 const cats = Object.keys(DB);
 let activeCat = 'ALL';
 
@@ -1164,12 +1061,28 @@ cats.forEach(c=>{
 });
 tabsEl.addEventListener('click', e=>{
   const t = e.target.closest('.tab'); if(!t) return;
-  activeCat = t.dataset.cat;
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-  t.classList.add('active');
-  renderLibrary();
+  selectCategory(t.dataset.cat);
 });
 document.getElementById('search').addEventListener('input', renderLibrary);
+
+function selectCategory(catName) {
+  activeCat = catName;
+  document.querySelectorAll('.tab').forEach(x => {
+    x.classList.toggle('active', x.dataset.cat === activeCat);
+  });
+  
+  // Highlight active muscle path in SVG
+  document.querySelectorAll('.muscle-path').forEach(p => {
+    p.classList.toggle('active', p.dataset.cat === activeCat);
+  });
+
+  const badgeText = document.getElementById('activeMuscleText');
+  if(badgeText) {
+    badgeText.textContent = activeCat === 'ALL' ? 'แสดงทุกหมวดหมู่' : activeCat;
+  }
+
+  renderLibrary();
+}
 
 function renderLibrary(){
   const q = document.getElementById('search').value.trim().toLowerCase();
@@ -1233,6 +1146,34 @@ function buildExCard(cat,name,eq){
   return card;
 }
 renderLibrary();
+
+/* ---------- Anatomy SVG Front/Back Toggle & Clicks ---------- */
+const btnFront = document.getElementById('btnFront');
+const btnBack = document.getElementById('btnBack');
+const svgFront = document.getElementById('svgFront');
+const svgBack = document.getElementById('svgBack');
+
+btnFront.addEventListener('click', () => {
+  btnFront.classList.add('active');
+  btnBack.classList.remove('active');
+  svgFront.style.display = 'block';
+  svgBack.style.display = 'none';
+});
+
+btnBack.addEventListener('click', () => {
+  btnBack.classList.add('active');
+  btnFront.classList.remove('active');
+  svgFront.style.display = 'none';
+  svgBack.style.display = 'block';
+});
+
+document.querySelectorAll('.muscle-path').forEach(path => {
+  path.addEventListener('click', () => {
+    const cat = path.dataset.cat;
+    selectCategory(cat);
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  });
+});
 
 /* ================= SCHEDULE VIEW ================= */
 const schedView = document.getElementById('view-schedule');
