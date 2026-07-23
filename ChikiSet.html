@@ -3,18 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ChikiSet — Compact Workout Tracker</title>
+<title>ChikiSet — Detailed Anatomy & Workout Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
+  /* Soft Cloud Theme */
   --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
   --panel-bg: rgba(255, 255, 255, 0.85);
   --panel-solid: #ffffff;
-  --panel-sub: rgba(241, 245, 249, 0.9);
+  --panel-sub: rgba(241, 245, 249, 0.85);
   --border-color: rgba(255, 255, 255, 0.8);
-  --border-line: rgba(226, 232, 240, 0.9);
+  --border-line: rgba(226, 232, 240, 0.85);
   
   --text-main: #0f172a;
   --text-muted: #64748b;
@@ -25,29 +26,34 @@
   --accent-orange: #ff5e3a;
   --accent-orange-grad: linear-gradient(135deg, #ff7e5f 0%, #ff5e3a 100%);
   --accent-subtle: rgba(99, 102, 241, 0.12);
-  --accent-glow: rgba(99, 102, 241, 0.2);
+  --accent-glow: rgba(99, 102, 241, 0.25);
+  
+  --muscle-fill: rgba(99, 102, 241, 0.12);
+  --muscle-stroke: #6366f1;
+  --muscle-active-fill: rgba(255, 94, 58, 0.45);
+  --muscle-active-stroke: #ff5e3a;
   
   --good-green: #10b981;
   --good-bg: rgba(16, 185, 129, 0.12);
   
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.03);
-  --shadow-md: 0 8px 20px -4px rgba(15, 23, 42, 0.06);
-  --shadow-lg: 0 16px 28px -8px rgba(15, 23, 42, 0.1);
+  --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 16px 30px -8px rgba(15, 23, 42, 0.12);
   
   --glass-blur: blur(16px);
   --radius-sm: 8px;
   --radius-md: 14px;
-  --radius-lg: 20px;
+  --radius-lg: 22px;
   --radius-full: 999px;
   
-  --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme="dark"] {
   --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  --panel-bg: rgba(30, 41, 59, 0.8);
+  --panel-bg: rgba(30, 41, 59, 0.75);
   --panel-solid: #1e293b;
-  --panel-sub: rgba(15, 23, 42, 0.7);
+  --panel-sub: rgba(15, 23, 42, 0.65);
   --border-color: rgba(255, 255, 255, 0.08);
   --border-line: rgba(51, 65, 85, 0.6);
   
@@ -56,40 +62,50 @@
   --text-light: #64748b;
   
   --accent-primary: #818cf8;
-  --accent-subtle: rgba(129, 140, 248, 0.18);
-  --shadow-md: 0 8px 25px -4px rgba(0, 0, 0, 0.3);
+  --accent-subtle: rgba(129, 140, 248, 0.15);
+  --muscle-fill: rgba(129, 140, 248, 0.15);
+  --muscle-stroke: #818cf8;
+  --shadow-md: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
   background: var(--bg-gradient);
+  background-attachment: fixed;
   color: var(--text-main);
-  font-family: 'Kanit', sans-serif;
+  font-family: 'Kanit', 'Inter', sans-serif;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  display: flex;
-  flex-direction: column;
+  padding-bottom: 60px;
 }
 
-/* Compact Header Bar */
+::selection {
+  background: var(--accent-primary);
+  color: #ffffff;
+}
+
+/* Integrated Header with Header Timer Bar */
 header {
-  flex: none;
+  position: sticky;
+  top: 0;
+  z-index: 50;
   background: var(--panel-bg);
   backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border-bottom: 1px solid var(--border-color);
-  padding: 8px 16px;
+  padding: 14px 24px 0;
   box-shadow: var(--shadow-sm);
-  z-index: 50;
 }
 
-.h-content {
+.h-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  max-width: 1400px;
+  gap: 16px;
+  flex-wrap: wrap;
+  max-width: 1240px;
   margin: 0 auto;
 }
 
@@ -100,24 +116,25 @@ header {
 }
 
 .logo-badge {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   background: var(--accent-orange-grad);
-  border-radius: 10px;
+  border-radius: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  font-size: 16px;
-  box-shadow: 0 4px 10px rgba(255, 94, 58, 0.3);
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(255, 94, 58, 0.3);
 }
 
 h1 {
-  font-size: 20px;
+  font-family: 'Kanit', sans-serif;
   font-weight: 700;
-  letter-spacing: -0.01em;
+  font-size: 24px;
+  letter-spacing: -0.02em;
   line-height: 1;
 }
 
@@ -127,54 +144,96 @@ h1 span {
   -webkit-text-fill-color: transparent;
 }
 
-.nav-tabs {
-  display: flex;
-  gap: 4px;
-  background: var(--panel-sub);
-  padding: 3px;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--border-line);
+.tagline {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 400;
 }
 
-.nav-tab {
-  font-size: 13px;
-  font-weight: 500;
-  padding: 5px 14px;
-  color: var(--text-muted);
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  transition: var(--transition-fast);
+/* Header Integrated Rest Timer Widget */
+.header-timer-bar {
   display: flex;
   align-items: center;
-  gap: 5px;
-}
-
-.nav-tab.active {
-  background: var(--panel-solid);
-  color: var(--accent-primary);
-  font-weight: 600;
-  box-shadow: var(--shadow-sm);
-}
-
-.search-wrap {
-  position: relative;
-  width: 220px;
-}
-
-.search {
-  width: 100%;
+  gap: 10px;
   background: var(--panel-sub);
   border: 1px solid var(--border-line);
   border-radius: var(--radius-full);
-  padding: 6px 12px 6px 32px;
+  padding: 4px 14px;
+}
+
+.timer-label-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.timer-display {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent-orange);
+  min-width: 50px;
+}
+
+.timer-btn {
+  font-family: 'Kanit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  background: var(--accent-orange-grad);
+  color: #ffffff;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255, 94, 58, 0.25);
+  transition: var(--transition-smooth);
+}
+
+.timer-btn:hover { transform: translateY(-1px); }
+
+.timer-preset {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: var(--panel-solid);
+  border: 1px solid var(--border-line);
+  color: var(--text-muted);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.timer-preset.active {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-wrap { position: relative; }
+
+.search {
+  background: var(--panel-sub);
+  border: 1px solid var(--border-line);
+  border-radius: var(--radius-full);
+  padding: 8px 16px 8px 36px;
   color: var(--text-main);
   font-family: 'Kanit', sans-serif;
-  font-size: 13px;
+  font-size: 13.5px;
+  width: 220px;
   outline: none;
-  transition: var(--transition-fast);
+  transition: var(--transition-smooth);
 }
 
 .search:focus {
+  width: 240px;
   background: var(--panel-solid);
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px var(--accent-subtle);
@@ -182,7 +241,7 @@ h1 span {
 
 .search-icon {
   position: absolute;
-  left: 11px;
+  left: 13px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-light);
@@ -190,9 +249,9 @@ h1 span {
   pointer-events: none;
 }
 
-.theme-btn {
-  width: 34px;
-  height: 34px;
+.icon-btn {
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-full);
   border: 1px solid var(--border-line);
   background: var(--panel-sub);
@@ -201,47 +260,132 @@ h1 span {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px;
 }
 
-/* Compact Main Workspace */
-.app-container {
-  flex: 1;
+/* Nav & Filter Chips Bar */
+.nav-wrap {
+  max-width: 1240px;
+  margin: 12px auto 0;
+}
+
+.main-tabs {
   display: flex;
-  overflow: hidden;
-  max-width: 1400px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 12px 16px;
-  gap: 16px;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-line);
 }
 
-/* Left Sidebar: Compact Muscle Map & Category Pills */
-.sidebar-anatomy {
-  width: 260px;
+.main-tab {
+  font-family: 'Kanit', sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 8px 16px;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.main-tab.active {
+  color: var(--accent-primary);
+  font-weight: 600;
+  border-bottom-color: var(--accent-primary);
+}
+
+/* Category Filter Chips Horizontal Bar */
+.tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 10px 0 4px;
+  scrollbar-width: none;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
   flex: none;
+  font-size: 12.5px;
+  font-weight: 500;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-line);
+  color: var(--text-muted);
+  padding: 5px 13px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  white-space: nowrap;
+  backdrop-filter: var(--glass-blur);
+  transition: var(--transition-smooth);
+}
+
+.tab:hover {
+  background: var(--panel-solid);
+  color: var(--text-main);
+}
+
+.tab.active {
+  background: var(--accent-gradient);
+  border-color: transparent;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 3px 10px var(--accent-glow);
+}
+
+/* Layout Wrapper */
+.wrap {
+  max-width: 1240px;
+  margin: 20px auto 0;
+  padding: 0 20px;
+}
+
+.split-container {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media(max-width: 920px) {
+  .split-container { grid-template-columns: 1fr; }
+  .anatomy-panel { order: -1; }
+}
+
+.view { display: none; }
+.view.active { display: block; }
+
+/* Realistic Vector Muscle Anatomy Sidebar Card */
+.anatomy-panel {
+  position: sticky;
+  top: 130px;
   background: var(--panel-bg);
   backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
+  padding: 18px;
   box-shadow: var(--shadow-md);
-  overflow-y: auto;
+  text-align: center;
 }
 
-.anatomy-head {
+.anatomy-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
-.anatomy-head h3 {
-  font-size: 13px;
+.anatomy-title {
+  font-size: 14.5px;
   font-weight: 600;
   color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .view-toggle {
@@ -255,664 +399,1068 @@ h1 span {
 .toggle-btn {
   font-family: 'Kanit', sans-serif;
   font-size: 11px;
+  font-weight: 500;
   border: none;
   background: transparent;
   color: var(--text-muted);
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: var(--radius-full);
   cursor: pointer;
+  transition: var(--transition-smooth);
 }
 
 .toggle-btn.active {
   background: var(--panel-solid);
   color: var(--accent-primary);
   font-weight: 600;
+  box-shadow: var(--shadow-sm);
 }
 
-.anatomy-svg-box {
+.anatomy-svg-wrap {
   width: 100%;
-  max-width: 180px;
-  margin: 0 auto 10px;
+  max-width: 250px;
+  margin: 0 auto;
 }
 
 .muscle-path {
-  fill: var(--accent-subtle);
-  stroke: var(--accent-primary);
+  fill: var(--muscle-fill);
+  stroke: var(--muscle-stroke);
   stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: var(--transition-smooth);
 }
 
 .muscle-path:hover {
   fill: rgba(255, 94, 58, 0.35);
   stroke: #ff5e3a;
-}
-
-.muscle-path.active {
-  fill: rgba(255, 94, 58, 0.5);
-  stroke: #ff5e3a;
-  stroke-width: 2;
   filter: drop-shadow(0 0 6px rgba(255, 94, 58, 0.5));
 }
 
-/* Category Quick Selector List */
-.cat-list {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+.muscle-path.active {
+  fill: var(--muscle-active-fill);
+  stroke: var(--muscle-active-stroke);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 8px rgba(255, 94, 58, 0.7));
 }
 
-.cat-item {
+.active-muscle-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-orange-grad);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  margin-top: 12px;
+  box-shadow: 0 4px 12px rgba(255, 94, 58, 0.3);
+}
+
+/* Cards & Exercise Lists */
+.cat-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent-primary);
+  margin: 20px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cat-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border-line);
+}
+
+.cat-title:first-child { margin-top: 0; }
+
+.ex-card {
+  background: var(--panel-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-smooth);
+}
+
+.ex-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.ex-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  gap: 12px;
+}
+
+.ex-name { font-size: 15px; font-weight: 600; color: var(--text-main); }
+.ex-eq { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+.set-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-primary);
+  background: var(--accent-subtle);
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+}
+
+.chevron { color: var(--text-light); transition: transform 0.2s; font-size: 12px; }
+.ex-card.open .chevron { transform: rotate(180deg); color: var(--accent-primary); }
+
+.ex-body {
+  display: none;
+  padding: 0 16px 16px;
+  border-top: 1px solid var(--border-line);
+  background: var(--panel-sub);
+}
+
+.ex-card.open .ex-body { display: block; }
+
+.set-labels {
+  display: grid;
+  grid-template-columns: 32px 1fr 1fr 36px;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 12px;
+  padding: 0 4px;
+}
+
+.set-row {
+  display: grid;
+  grid-template-columns: 32px 1fr 1fr 36px;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.set-row .idx {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.set-row input {
+  background: var(--panel-solid);
+  border: 1px solid var(--border-line);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  padding: 7px 10px;
+  font-size: 13.5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  width: 100%;
+  outline: none;
+}
+
+.set-row input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.del-set {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 17px;
+  cursor: pointer;
+  border-radius: 6px;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.del-set:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+
+.ex-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+.btn-mini {
+  font-family: 'Kanit', sans-serif;
   font-size: 12.5px;
   font-weight: 500;
-  padding: 6px 10px;
   border-radius: var(--radius-sm);
-  color: var(--text-muted);
+  padding: 7px 13px;
   cursor: pointer;
+  border: 1px solid var(--border-line);
+  background: var(--panel-solid);
+  color: var(--text-main);
+  transition: var(--transition-smooth);
+}
+
+.btn-mini.accent {
+  background: var(--accent-gradient);
+  border-color: transparent;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 3px 10px var(--accent-glow);
+}
+
+.empty {
+  color: var(--text-muted);
+  font-size: 14px;
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--panel-bg);
+  border: 1px dashed var(--border-line);
+  border-radius: var(--radius-lg);
+}
+
+/* Schedule UI */
+.sched-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: var(--transition-fast);
+  margin-bottom: 18px;
+  gap: 10px; flex-wrap: wrap;
 }
 
-.cat-item:hover {
-  background: var(--panel-sub);
-  color: var(--text-main);
-}
+.new-day-form { display: flex; gap: 8px; width: 100%; max-width: 480px; }
 
-.cat-item.active {
-  background: var(--accent-primary);
-  color: #ffffff;
-  font-weight: 600;
-}
-
-/* Right Stage: Zero-Scroll Grid of Exercises */
-.stage-panel {
+.new-day-form input {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 9px 14px;
+  color: var(--text-main);
+  font-family: 'Kanit', sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+
+.day-card {
   background: var(--panel-bg);
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 14px;
-  box-shadow: var(--shadow-md);
-}
-
-.stage-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border-line);
-}
-
-.stage-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--accent-primary);
-}
-
-.stage-count {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.ex-grid-wrap {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-.ex-grid-wrap::-webkit-scrollbar {
-  width: 5px;
-}
-.ex-grid-wrap::-webkit-scrollbar-thumb {
-  background: var(--border-line);
-  border-radius: 10px;
-}
-
-.ex-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 10px;
-}
-
-.compact-card {
-  background: var(--panel-solid);
-  border: 1px solid var(--border-line);
-  border-radius: var(--radius-md);
-  padding: 10px 12px;
-  transition: var(--transition-fast);
+  margin-bottom: 14px;
+  overflow: hidden;
   box-shadow: var(--shadow-sm);
 }
 
-.compact-card:hover {
-  border-color: var(--accent-primary);
-  box-shadow: var(--shadow-md);
-}
-
-.card-head {
+.day-head {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 8px;
+  padding: 16px 20px;
+  cursor: pointer;
+  gap: 10px;
 }
 
-.card-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-main);
-  line-height: 1.2;
-}
+.day-name { font-size: 17px; font-weight: 600; color: var(--text-main); }
+.day-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 
-.card-eq {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
+.day-del { background: none; border: none; color: var(--text-light); font-size: 16px; cursor: pointer; padding: 4px; }
+.day-del:hover { color: #ef4444; }
 
-.set-badge {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--accent-primary);
-  background: var(--accent-subtle);
-  padding: 3px 8px;
-  border-radius: var(--radius-full);
-}
+.day-body { display: none; padding: 0 20px 20px; border-top: 1px solid var(--border-line); background: var(--panel-sub); }
+.day-card.open .day-body { display: block; }
 
-/* Fast Set Inputs inside Compact Card */
-.compact-sets {
-  margin-top: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+.date-row { display: flex; align-items: center; gap: 10px; margin: 16px 0; flex-wrap: wrap; }
 
-.compact-set-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--panel-sub);
-  padding: 4px 8px;
-  border-radius: var(--radius-sm);
-}
-
-.compact-set-row .set-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-muted);
-  width: 18px;
-}
-
-.input-num-wrap {
-  display: flex;
-  align-items: center;
-  flex: 1;
+.date-row input[type="date"] {
   background: var(--panel-solid);
   border: 1px solid var(--border-line);
-  border-radius: 6px;
-  overflow: hidden;
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  padding: 6px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
 }
 
-.step-btn {
-  width: 22px;
-  height: 24px;
-  border: none;
-  background: var(--panel-sub);
-  color: var(--text-main);
-  font-weight: 700;
-  font-size: 12px;
+.history-chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0 4px; }
+
+.chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: var(--panel-solid);
+  border: 1px solid var(--border-line);
+  color: var(--text-muted);
+  padding: 4px 9px;
+  border-radius: var(--radius-full);
   cursor: pointer;
 }
-.step-btn:hover { background: var(--border-line); }
 
-.compact-input {
-  width: 100%;
-  border: none;
-  background: transparent;
+.chip.today { border-color: var(--good-green); color: var(--good-green); background: var(--good-bg); }
+.chip.active { background: var(--accent-primary); border-color: var(--accent-primary); color: #ffffff; }
+
+.streak-strip { display: flex; gap: 5px; margin-top: 16px; }
+
+.streak-day {
+  flex: 1;
   text-align: center;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--text-main);
-  outline: none;
-  padding: 2px;
-}
-
-.compact-actions {
-  display: flex;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.btn-fast {
-  flex: 1;
-  font-family: 'Kanit', sans-serif;
-  font-size: 11.5px;
-  font-weight: 500;
-  padding: 5px 0;
-  border-radius: 6px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  padding: 6px 0;
+  border-radius: var(--radius-sm);
+  background: var(--panel-solid);
   border: 1px solid var(--border-line);
-  background: var(--panel-sub);
-  color: var(--text-main);
-  cursor: pointer;
-}
-.btn-fast.accent {
-  background: var(--accent-gradient);
-  border-color: transparent;
-  color: #fff;
-  font-weight: 600;
 }
 
-.btn-fast-del {
-  border: none;
-  background: none;
-  color: var(--text-light);
-  cursor: pointer;
-  padding: 0 4px;
-  font-size: 14px;
-}
-.btn-fast-del:hover { color: #ef4444; }
+.streak-day.hit { background: var(--accent-subtle); border-color: var(--accent-primary); color: var(--accent-primary); font-weight: 700; }
 
-/* Rest Timer Floating Mini Widget */
-.timer-widget {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 90;
+/* Modal Picker */
+.picker-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+
+.picker-overlay.open { display: flex; }
+
+.picker-box {
   background: var(--panel-solid);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-full);
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  border-radius: var(--radius-lg);
+  width: 100%; max-width: 480px;
+  padding: 20px; max-height: 80vh; overflow-y: auto;
   box-shadow: var(--shadow-lg);
 }
 
-.timer-digits {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--accent-orange);
-}
+.picker-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.picker-head h3 { font-size: 18px; font-weight: 600; color: var(--text-main); }
+.picker-close { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
 
-.timer-btn-mini {
-  border: none;
-  background: var(--accent-orange-grad);
-  color: #fff;
+.picker-search {
+  width: 100%;
+  background: var(--panel-sub);
+  border: 1px solid var(--border-line);
+  border-radius: var(--radius-md);
+  padding: 9px 12px;
+  color: var(--text-main);
   font-family: 'Kanit', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: var(--radius-full);
-  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 12px;
+  outline: none;
 }
 
-/* Schedule View UI */
-.sched-container {
-  flex: 1;
-  overflow-y: auto;
+.pick-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 4px; border-bottom: 1px solid var(--border-line); font-size: 13.5px; }
+.pick-item .p-cat { font-size: 10.5px; color: var(--text-muted); }
+
+.pick-add {
+  background: var(--panel-sub);
+  border: 1px solid var(--border-line);
+  color: var(--text-main);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px; font-size: 12px; cursor: pointer;
 }
 
-.empty {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 13.5px;
-  padding: 40px;
-}
+footer { max-width: 1240px; margin: 30px auto 0; padding: 0 20px; color: var(--text-muted); font-size: 11.5px; text-align: center; }
 
-@media(max-width: 800px) {
-  body { height: auto; overflow: auto; }
-  .app-container { flex-direction: column; height: auto; }
-  .sidebar-anatomy { width: 100%; max-height: 240px; }
-  .ex-grid { grid-template-columns: 1fr; }
-}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="h-content">
+  <div class="h-top">
     <div class="logo-group">
       <div class="logo-badge">CS</div>
-      <h1>Chiki<span>Set</span></h1>
+      <div>
+        <h1>Chiki<span>Set</span></h1>
+        <p class="tagline">ตารางออกกำลังกาย & Rest Timer — บันทึกในเครื่องอัตโนมัติ</p>
+      </div>
     </div>
 
-    <div class="nav-tabs">
-      <div class="nav-tab active" data-view="library">💪 คลังท่า</div>
-      <div class="nav-tab" data-view="schedule">📅 ตารางของฉัน</div>
+    <!-- Integrated Rest Timer Bar in Header -->
+    <div class="header-timer-bar">
+      <span class="timer-label-text">⏱ พัก:</span>
+      <span class="timer-display" id="timerDigits">01:30</span>
+      <button class="timer-preset active" data-sec="60">60s</button>
+      <button class="timer-preset" data-sec="90">90s</button>
+      <button class="timer-preset" data-sec="120">120s</button>
+      <button class="timer-btn" id="headerTimerBtn">เริ่มพัก</button>
     </div>
 
-    <div style="display:flex; gap:8px; align-items:center;">
+    <div class="header-actions">
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
-        <input class="search" id="search" placeholder="ค้นหาท่า (พิมพ์ปุ๊บเจอเลย)...">
+        <input class="search" id="search" placeholder="ค้นหาท่าออกกำลังกาย...">
       </div>
-      <button class="theme-btn" id="themeToggle">🌙</button>
+      <button class="icon-btn" id="themeToggle" title="สลับธีม สว่าง/มืด">🌙</button>
     </div>
   </div>
+
+  <div class="nav-wrap">
+    <div class="main-tabs">
+      <div class="main-tab active" data-view="library"><span>💪</span> คลังท่าออกกำลังกาย</div>
+      <div class="main-tab" data-view="schedule"><span>📅</span> ตารางของฉัน</div>
+    </div>
+  </div>
+
+  <!-- Horizontal Filter Chips Bar -->
+  <div class="tabs" id="tabs"></div>
 </header>
 
-<div class="app-container">
-  <!-- Left Side: Zero-Scroll Anatomy Selector -->
-  <div class="sidebar-anatomy" id="sidebarAnatomy">
-    <div class="anatomy-head">
-      <h3>🎯 แตะเลือกส่วนกล้ามเนื้อ</h3>
-      <div class="view-toggle">
-        <button class="toggle-btn active" id="btnFront">หน้า</button>
-        <button class="toggle-btn" id="btnBack">หลัง</button>
+<div class="wrap">
+  <div class="view active" id="view-library">
+    <div class="split-container">
+      <div id="library-list-col"></div>
+      
+      <!-- Realistic Vector Muscle Anatomy Card -->
+      <div class="anatomy-panel">
+        <div class="anatomy-header">
+          <div class="anatomy-title"><span>🧍‍♂️</span> จิ้มมัดกล้ามเนื้อสมจริง</div>
+          <div class="view-toggle">
+            <button class="toggle-btn active" id="btnFront">ด้านหน้า</button>
+            <button class="toggle-btn" id="btnBack">ด้านหลัง</button>
+          </div>
+        </div>
+
+        <div class="anatomy-svg-wrap">
+          <!-- Realistic Front Human Muscle SVG -->
+          <svg id="svgFront" viewBox="0 0 200 380" width="100%" height="auto">
+            <!-- Head & Neck Contour -->
+            <path d="M85 30 Q100 10 115 30 Q118 45 110 52 Q100 56 90 52 Q82 45 85 30 Z" fill="var(--panel-sub)" stroke="var(--border-line)" stroke-width="1.5"/>
+            
+            <!-- Neck / Traps Front (หลังบน/คอ) -->
+            <path class="muscle-path" data-cat="หลังบน (Upper Back/Traps)" d="M88 53 Q100 58 112 53 L122 68 Q100 75 78 68 Z" title="หลังบน/สะบัก (Traps)"/>
+
+            <!-- Shoulders Front: Delts Split (ไหล่หน้า & ไหล่ข้าง) -->
+            <!-- Front Delts (ไหล่หน้า) -->
+            <path class="muscle-path" data-cat="ไหล่หน้า (Front Delts)" d="M76 68 Q84 66 90 75 L82 95 Q70 88 76 68 Z" title="ไหล่หน้า (Front Delts)"/>
+            <path class="muscle-path" data-cat="ไหล่หน้า (Front Delts)" d="M124 68 Q116 66 110 75 L118 95 Q130 88 124 68 Z" title="ไหล่หน้า (Front Delts)"/>
+            
+            <!-- Side Delts (ไหล่ข้าง) -->
+            <path class="muscle-path" data-cat="ไหล่ข้าง (Side Delts)" d="M62 72 Q75 67 76 76 L66 98 Q55 85 62 72 Z" title="ไหล่ข้าง (Side Delts)"/>
+            <path class="muscle-path" data-cat="ไหล่ข้าง (Side Delts)" d="M138 72 Q125 67 124 76 L134 98 Q145 85 138 72 Z" title="ไหล่ข้าง (Side Delts)"/>
+
+            <!-- Chest (อก) -->
+            <path class="muscle-path" data-cat="อก (Chest)" d="M88 76 L98 76 L98 108 L74 104 Q72 88 88 76 Z" title="อก (Chest)"/>
+            <path class="muscle-path" data-cat="อก (Chest)" d="M112 76 L102 76 L102 108 L126 104 Q128 88 112 76 Z" title="อก (Chest)"/>
+
+            <!-- Biceps (ไบเซ็ป) -->
+            <path class="muscle-path" data-cat="ไบเซ็ป (Biceps)" d="M58 92 Q68 102 62 126 L50 122 Q46 104 58 92 Z" title="ไบเซ็ป (Biceps)"/>
+            <path class="muscle-path" data-cat="ไบเซ็ป (Biceps)" d="M142 92 Q132 102 138 126 L150 122 Q154 104 142 92 Z" title="ไบเซ็ป (Biceps)"/>
+
+            <!-- Forearms (ปลายแขน) -->
+            <path class="muscle-path" data-cat="ปลายแขน (Forearms)" d="M48 126 L58 128 L50 172 L40 166 Z" title="ปลายแขน (Forearms)"/>
+            <path class="muscle-path" data-cat="ปลายแขน (Forearms)" d="M152 126 L142 128 L150 172 L160 166 Z" title="ปลายแขน (Forearms)"/>
+
+            <!-- Abs / Core (หน้าท้อง/แกนกลาง) -->
+            <path class="muscle-path" data-cat="แกนกลางลำตัว (Abs/Core)" d="M78 110 L122 110 L118 165 L82 165 Z" title="แกนกลางลำตัว (Abs/Core)"/>
+
+            <!-- Quads (ต้นขาหน้า) -->
+            <path class="muscle-path" data-cat="ต้นขาหน้า (Quads)" d="M72 170 L96 170 L92 248 L66 242 Q60 200 72 170 Z" title="ต้นขาหน้า (Quads)"/>
+            <path class="muscle-path" data-cat="ต้นขาหน้า (Quads)" d="M128 170 L104 170 L108 248 L134 242 Q140 200 128 170 Z" title="ต้นขาหน้า (Quads)"/>
+
+            <!-- Calves (น่องหน้า) -->
+            <path class="muscle-path" data-cat="น่อง (Calves)" d="M66 258 L88 258 L84 326 L70 322 Z" title="น่อง (Calves)"/>
+            <path class="muscle-path" data-cat="น่อง (Calves)" d="M134 258 L112 258 L116 326 L130 322 Z" title="น่อง (Calves)"/>
+          </svg>
+
+          <!-- Realistic Back Human Muscle SVG -->
+          <svg id="svgBack" viewBox="0 0 200 380" width="100%" height="auto" style="display:none;">
+            <!-- Head Back -->
+            <path d="M85 30 Q100 10 115 30 Q118 45 110 52 Q100 56 90 52 Q82 45 85 30 Z" fill="var(--panel-sub)" stroke="var(--border-line)" stroke-width="1.5"/>
+            
+            <!-- Upper Back / Traps (หลังบน/สะบัก) -->
+            <path class="muscle-path" data-cat="หลังบน (Upper Back/Traps)" d="M76 66 L124 66 L136 102 L100 125 L64 102 Z" title="หลังบน/สะบัก (Traps)"/>
+
+            <!-- Lats (ปีก) -->
+            <path class="muscle-path" data-cat="ปีก (Lats)" d="M64 104 L98 126 L96 155 L68 140 Z" title="ปีก (Lats)"/>
+            <path class="muscle-path" data-cat="ปีก (Lats)" d="M136 104 L102 126 L104 155 L132 140 Z" title="ปีก (Lats)"/>
+
+            <!-- Lower Back (หลังล่าง) -->
+            <path class="muscle-path" data-cat="หลังล่าง (Lower Back)" d="M96 130 L104 130 L104 165 L96 165 Z" title="หลังล่าง (Lower Back)"/>
+
+            <!-- Rear Delts (ไหล่หลัง) -->
+            <path class="muscle-path" data-cat="ไหล่หลัง (Rear Delts)" d="M60 72 Q72 68 80 74 L74 96 Q58 90 54 78 Z" title="ไหล่หลัง (Rear Delts)"/>
+            <path class="muscle-path" data-cat="ไหล่หลัง (Rear Delts)" d="M140 72 Q128 68 120 74 L126 96 Q142 90 146 78 Z" title="ไหล่หลัง (Rear Delts)"/>
+
+            <!-- Triceps (ไตรเซ็ป) -->
+            <path class="muscle-path" data-cat="ไตรเซ็ป (Triceps)" d="M52 86 Q60 94 54 122 L44 118 Z" title="ไตรเซ็ป (Triceps)"/>
+            <path class="muscle-path" data-cat="ไตรเซ็ป (Triceps)" d="M148 86 Q140 94 146 122 L156 118 Z" title="ไตรเซ็ป (Triceps)"/>
+
+            <!-- Glutes (สะโพก) -->
+            <path class="muscle-path" data-cat="สะโพก (Glutes)" d="M66 166 L98 166 L96 208 L68 202 Z" title="สะโพก (Glutes)"/>
+            <path class="muscle-path" data-cat="สะโพก (Glutes)" d="M134 166 L102 166 L104 208 L132 202 Z" title="สะโพก (Glutes)"/>
+
+            <!-- Hamstrings (ต้นขาหลัง) -->
+            <path class="muscle-path" data-cat="ต้นขาหลัง (Hamstrings)" d="M68 212 L96 212 L92 255 L68 250 Z" title="ต้นขาหลัง (Hamstrings)"/>
+            <path class="muscle-path" data-cat="ต้นขาหลัง (Hamstrings)" d="M132 212 L104 212 L108 255 L132 250 Z" title="ต้นขาหลัง (Hamstrings)"/>
+
+            <!-- Calves (น่องหลัง) -->
+            <path class="muscle-path" data-cat="น่อง (Calves)" d="M68 260 L90 260 L85 328 L72 322 Z" title="น่อง (Calves)"/>
+            <path class="muscle-path" data-cat="น่อง (Calves)" d="M132 260 L110 260 L115 328 L128 322 Z" title="น่อง (Calves)"/>
+          </svg>
+        </div>
+
+        <div id="activeMuscleBadge" class="active-muscle-badge">
+          <span>🎯</span> <span id="activeMuscleText">เลือกหมวดหมู่ทั้งหมด</span>
+        </div>
       </div>
     </div>
-
-    <div class="anatomy-svg-box">
-      <!-- Front Body SVG -->
-      <svg id="svgFront" viewBox="0 0 200 360" width="100%" height="auto">
-        <ellipse cx="100" cy="35" rx="20" ry="24" fill="var(--panel-sub)" stroke="var(--border-line)" stroke-width="1.5"/>
-        <path class="muscle-path" data-cat="ไหล่ (Shoulders)" d="M60 75 Q72 70 88 74 L84 98 Q65 96 56 86 Z" title="ไหล่"/>
-        <path class="muscle-path" data-cat="ไหล่ (Shoulders)" d="M140 75 Q128 70 112 74 L116 98 Q135 96 144 86 Z" title="ไหล่"/>
-        <path class="muscle-path" data-cat="อก (Chest)" d="M86 76 L98 76 L98 108 L75 104 Q72 90 86 76 Z" title="อก"/>
-        <path class="muscle-path" data-cat="อก (Chest)" d="M114 76 L102 76 L102 108 L125 104 Q128 90 114 76 Z" title="อก"/>
-        <path class="muscle-path" data-cat="ไบเซ็ป (Biceps)" d="M54 90 Q62 98 56 124 L46 120 Z" title="ไบเซ็ป"/>
-        <path class="muscle-path" data-cat="ไบเซ็ป (Biceps)" d="M146 90 Q138 98 144 124 L154 120 Z" title="ไบเซ็ป"/>
-        <path class="muscle-path" data-cat="ปลายแขน (Forearms)" d="M46 126 L54 128 L48 168 L38 162 Z" title="ปลายแขน"/>
-        <path class="muscle-path" data-cat="ปลายแขน (Forearms)" d="M154 126 L146 128 L152 168 L162 162 Z" title="ปลายแขน"/>
-        <path class="muscle-path" data-cat="แกนกลางลำตัว (Abs/Core)" d="M78 110 L122 110 L118 160 L82 160 Z" title="แกนกลางลำตัว"/>
-        <path class="muscle-path" data-cat="ต้นขาหน้า (Quads)" d="M74 166 L96 166 L92 240 L68 235 Z" title="ต้นขาหน้า"/>
-        <path class="muscle-path" data-cat="ต้นขาหน้า (Quads)" d="M126 166 L104 166 L108 240 L132 235 Z" title="ต้นขาหน้า"/>
-        <path class="muscle-path" data-cat="น่อง (Calves)" d="M68 250 L90 250 L86 315 L72 310 Z" title="น่อง"/>
-        <path class="muscle-path" data-cat="น่อง (Calves)" d="M132 250 L110 250 L114 315 L128 310 Z" title="น่อง"/>
-      </svg>
-
-      <!-- Back Body SVG -->
-      <svg id="svgBack" viewBox="0 0 200 360" width="100%" height="auto" style="display:none;">
-        <ellipse cx="100" cy="35" rx="20" ry="24" fill="var(--panel-sub)" stroke="var(--border-line)" stroke-width="1.5"/>
-        <path class="muscle-path" data-cat="หลัง (Back)" d="M75 68 L125 68 L138 118 L100 150 L62 118 Z" title="หลัง"/>
-        <path class="muscle-path" data-cat="ไหล่ (Shoulders)" d="M58 75 Q72 70 82 74 L78 98 Z" title="ไหล่"/>
-        <path class="muscle-path" data-cat="ไหล่ (Shoulders)" d="M142 75 Q128 70 118 74 L122 98 Z" title="ไหล่"/>
-        <path class="muscle-path" data-cat="ไตรเซ็ป (Triceps)" d="M52 88 Q60 96 54 122 L44 118 Z" title="ไตรเซ็ป"/>
-        <path class="muscle-path" data-cat="ไตรเซ็ป (Triceps)" d="M148 88 Q140 96 146 122 L156 118 Z" title="ไตรเซ็ป"/>
-        <path class="muscle-path" data-cat="สะโพก (Glutes)" d="M64 156 L98 156 L96 200 L66 194 Z" title="สะโพก"/>
-        <path class="muscle-path" data-cat="สะโพก (Glutes)" d="M136 156 L102 156 L104 200 L134 194 Z" title="สะโพก"/>
-        <path class="muscle-path" data-cat="ต้นขาหลัง (Hamstrings)" d="M66 204 L96 204 L92 248 L68 244 Z" title="ต้นขาหลัง"/>
-        <path class="muscle-path" data-cat="ต้นขาหลัง (Hamstrings)" d="M134 204 L104 204 L108 248 L132 244 Z" title="ต้นขาหลัง"/>
-        <path class="muscle-path" data-cat="น่อง (Calves)" d="M68 254 L90 254 L85 315 L72 310 Z" title="น่อง"/>
-        <path class="muscle-path" data-cat="น่อง (Calves)" d="M132 254 L110 254 L115 315 L128 310 Z" title="น่อง"/>
-      </svg>
-    </div>
-
-    <!-- Fast Vertical Category List -->
-    <div class="cat-list" id="catList"></div>
   </div>
 
-  <!-- Right Stage: Exercises & Fast Set Inputs -->
-  <div class="stage-panel" id="view-library">
-    <div class="stage-head">
-      <div class="stage-title" id="stageTitle">💪 ทุกหมวดหมู่</div>
-      <div class="stage-count" id="stageCount">0 ท่า</div>
-    </div>
-
-    <div class="ex-grid-wrap">
-      <div class="ex-grid" id="exGrid"></div>
-    </div>
-  </div>
-
-  <!-- Schedule Stage View -->
-  <div class="stage-panel view" id="view-schedule" style="display:none;">
-    <div class="sched-container" id="schedContent"></div>
-  </div>
+  <div class="view" id="view-schedule"></div>
 </div>
 
-<!-- Floating Fast Rest Timer Widget -->
-<div class="timer-widget" id="timerWidget">
-  <span>⏱ พัก:</span>
-  <span class="timer-digits" id="timerDigits">01:30</span>
-  <button class="timer-btn-mini" id="timerStartBtn">เริ่มพัก 90s</button>
+<footer>
+  รายการท่าออกกำลังกายครอบคลุมท่าหลักในยิม (~140 ท่า) | บันทึกประวัติและตารางในเบราว์เซอร์อัตโนมัติ (localStorage)
+</footer>
+
+<!-- Modal Picker -->
+<div class="picker-overlay" id="pickerOverlay">
+  <div class="picker-box">
+    <div class="picker-head">
+      <h3>เพิ่มท่าเข้าวัน</h3>
+      <button class="picker-close" id="pickerClose">×</button>
+    </div>
+    <input class="picker-search" id="pickerSearch" placeholder="ค้นหาท่าออกกำลังกาย...">
+    <div id="pickerList"></div>
+  </div>
 </div>
 
 <script>
-/* ---------- Database ---------- */
+/* ---------- Database with detailed Muscle Categorization ---------- */
 const DB = {
-"อก (Chest)": [["Barbell Bench Press","บาร์เบล"],["Incline Barbell Bench Press","บาร์เบล"],["Decline Bench Press","บาร์เบล"],["Dumbbell Bench Press","ดัมเบล"],["Incline Dumbbell Press","ดัมเบล"],["Dumbbell Fly","ดัมเบล"],["Cable Crossover","เคเบิล"],["Pec Deck Machine","เครื่อง"],["Push-Up","น้ำหนักตัว"],["Dips (Chest)","น้ำหนักตัว"]],
-"หลัง (Back)": [["Deadlift","บาร์เบล"],["Pull-Up","น้ำหนักตัว"],["Chin-Up","น้ำหนักตัว"],["Lat Pulldown","เคเบิล"],["Barbell Row","บาร์เบล"],["Dumbbell Row","ดัมเบล"],["Seated Cable Row","เคเบิล"],["Face Pull","เคเบิล"]],
-"ไหล่ (Shoulders)": [["Overhead Press","บาร์เบล"],["Dumbbell Shoulder Press","ดัมเบล"],["Arnold Press","ดัมเบล"],["Lateral Raise","ดัมเบล"],["Front Raise","ดัมเบล"],["Rear Delt Fly","ดัมเบล"]],
-"ไบเซ็ป (Biceps)": [["Barbell Curl","บาร์เบล"],["Dumbbell Curl","ดัมเบล"],["Hammer Curl","ดัมเบล"],["Preacher Curl","อีซี่บาร์"],["Cable Curl","เคเบิล"]],
-"ไตรเซ็ป (Triceps)": [["Tricep Pushdown","เคเบิล"],["Overhead Extension","ดัมเบล"],["Skull Crushers","อีซี่บาร์"],["Dips (Tricep)","น้ำหนักตัว"]],
-"ปลายแขน (Forearms)": [["Wrist Curl","บาร์เบล"],["Reverse Wrist Curl","บาร์เบล"],["Farmer's Carry","ดัมเบล"]],
-"แกนกลางลำตัว (Abs/Core)": [["Plank","น้ำหนักตัว"],["Crunch","น้ำหนักตัว"],["Hanging Leg Raise","บาร์โหน"],["Cable Crunch","เคเบิล"]],
-"ต้นขาหน้า (Quads)": [["Back Squat","บาร์เบล"],["Front Squat","บาร์เบล"],["Leg Press","เครื่อง"],["Leg Extension","เครื่อง"],["Bulgarian Split Squat","ดัมเบล"]],
-"ต้นขาหลัง (Hamstrings)": [["Romanian Deadlift","บาร์เบล"],["Lying Leg Curl","เครื่อง"],["Stiff-Leg Deadlift","บาร์เบล"]],
-"สะโพก (Glutes)": [["Hip Thrust","บาร์เบล"],["Glute Bridge","น้ำหนักตัว"],["Cable Glute Kickback","เคเบิล"]],
-"น่อง (Calves)": [["Standing Calf Raise","เครื่อง"],["Seated Calf Raise","เครื่อง"]],
-"คาร์ดิโอ/พลัยโอ (Cardio & Plyo)": [["Treadmill Run","เครื่อง"],["Jump Rope","เชือก"],["Burpee","น้ำหนักตัว"]],
-"โอลิมปิก/พลัง (Olympic & Power)": [["Clean and Jerk","บาร์เบล"],["Snatch","บาร์เบล"],["Kettlebell Swing","เคทเทิลเบล"]]
+"อก (Chest)": [
+  ["Barbell Bench Press","บาร์เบล"],["Incline Barbell Bench Press","บาร์เบล"],
+  ["Decline Bench Press","บาร์เบล"],["Dumbbell Bench Press","ดัมเบล"],
+  ["Incline Dumbbell Press","ดัมเบล"],["Dumbbell Fly","ดัมเบล"],
+  ["Cable Crossover","เคเบิล"],["Pec Deck Machine","เครื่อง"],
+  ["Push-Up","น้ำหนักตัว"],["Dips (Chest-focused)","น้ำหนักตัว"]
+],
+"หลังบน (Upper Back/Traps)": [
+  ["Barbell Row","บาร์เบล"],["Pendlay Row","บาร์เบล"],["T-Bar Row","เครื่อง"],
+  ["Face Pull","เคเบิล"],["Shrugs","บาร์เบล/ดัมเบล"],["Upright Row","บาร์เบล"]
+],
+"ปีก (Lats)": [
+  ["Lat Pulldown","เคเบิล"],["Pull-Up","น้ำหนักตัว"],["Chin-Up","น้ำหนักตัว"],
+  ["Dumbbell Row","ดัมเบล"],["Seated Cable Row","เคเบิล"],["Straight-Arm Pulldown","เคเบิล"]
+],
+"หลังล่าง (Lower Back)": [
+  ["Deadlift","บาร์เบล"],["Rack Pull","บาร์เบล"],["Hyperextension","เครื่อง/น้ำหนักตัว"],["Good Morning","บาร์เบล"]
+],
+"ไหล่หน้า (Front Delts)": [
+  ["Overhead Press (Barbell)","บาร์เบล"],["Dumbbell Shoulder Press","ดัมเบล"],
+  ["Arnold Press","ดัมเบล"],["Front Raise","ดัมเบล"],["Push Press","บาร์เบล"]
+],
+"ไหล่ข้าง (Side Delts)": [
+  ["Lateral Raise","ดัมเบล"],["Cable Lateral Raise","เคเบิล"],["Upright Row","บาร์เบล"]
+],
+"ไหล่หลัง (Rear Delts)": [
+  ["Rear Delt Fly","ดัมเบล"],["Face Pull","เคเบิล"]
+],
+"ไบเซ็ป (Biceps)": [
+  ["Barbell Curl","บาร์เบล"],["Dumbbell Curl","ดัมเบล"],["Hammer Curl","ดัมเบล"],
+  ["Preacher Curl","บาร์เบล/เครื่อง"],["Concentration Curl","ดัมเบล"],["Cable Curl","เคเบิล"],
+  ["EZ-Bar Curl","อีซี่บาร์"]
+],
+"ไตรเซ็ป (Triceps)": [
+  ["Close-Grip Bench Press","บาร์เบล"],["Tricep Pushdown","เคเบิล"],
+  ["Overhead Tricep Extension","ดัมเบล"],["Skull Crushers","อีซี่บาร์"],
+  ["Dips (Tricep-focused)","น้ำหนักตัว"],["Rope Pushdown","เคเบิล"]
+],
+"ปลายแขน (Forearms)": [
+  ["Wrist Curl","บาร์เบล/ดัมเบล"],["Reverse Wrist Curl","บาร์เบล/ดัมเบล"],
+  ["Farmer's Carry","ดัมเบล/เคทเทิลเบล"],["Plate Pinch","แผ่นน้ำหนัก"],["Dead Hang","บาร์โหน"]
+],
+"แกนกลางลำตัว (Abs/Core)": [
+  ["Plank","น้ำหนักตัว"],["Crunch","น้ำหนักตัว"],["Sit-Up","น้ำหนักตัว"],
+  ["Hanging Leg Raise","บาร์โหน"],["Cable Crunch","เคเบิล"],["Russian Twist","น้ำหนักตัว/ดัมเบล"],
+  ["Ab Wheel Rollout","ล้อเอบ"]
+],
+"ต้นขาหน้า (Quads)": [
+  ["Back Squat","บาร์เบล"],["Front Squat","บาร์เบล"],["Leg Press","เครื่อง"],
+  ["Leg Extension","เครื่อง"],["Bulgarian Split Squat","ดัมเบล"],["Walking Lunge","ดัมเบล"],
+  ["Goblet Squat","ดัมเบล/เคทเทิลเบล"]
+],
+"ต้นขาหลัง (Hamstrings)": [
+  ["Romanian Deadlift","บาร์เบล"],["Lying Leg Curl","เครื่อง"],["Good Morning","บาร์เบล"],
+  ["Stiff-Leg Deadlift","บาร์เบล"],["Nordic Curl","น้ำหนักตัว"]
+],
+"สะโพก (Glutes)": [
+  ["Hip Thrust","บาร์เบล"],["Glute Bridge","บาร์เบล/น้ำหนักตัว"],["Cable Glute Kickback","เคเบิล"],
+  ["Sumo Deadlift","บาร์เบล"]
+],
+"น่อง (Calves)": [
+  ["Standing Calf Raise","เครื่อง/บาร์เบล"],["Seated Calf Raise","เครื่อง"],
+  ["Donkey Calf Raise","เครื่อง"]
+],
+"คาร์ดิโอ/พลัยโอ (Cardio & Plyo)": [
+  ["Treadmill Run","เครื่อง"],["Rowing Machine","เครื่อง"],["Jump Rope","เชือกกระโดด"],
+  ["Burpee","น้ำหนักตัว"],["Assault Bike","เครื่อง"]
+],
+"โอลิมปิก/พลัง (Olympic & Power)": [
+  ["Clean and Jerk","บาร์เบล"],["Snatch","บาร์เบล"],["Power Clean","บาร์เบล"],
+  ["Kettlebell Swing","เคทเทิลเบล"]
+]
 };
 
-/* ---------- State Persistence ---------- */
-let logs = JSON.parse(localStorage.getItem('workoutLogs') || '{}');
-let activeCat = 'ALL';
+const FLAT = [];
+Object.entries(DB).forEach(([cat,list])=> list.forEach(([name,eq])=> FLAT.push({cat,name,eq})));
+
+/* ---------- Theme Switcher ---------- */
+const themeBtn = document.getElementById('themeToggle');
 let currentTheme = localStorage.getItem('chikisetTheme') || 'light';
-
 document.documentElement.setAttribute('data-theme', currentTheme);
-document.getElementById('themeToggle').textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+themeBtn.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
 
-document.getElementById('themeToggle').addEventListener('click', () => {
+themeBtn.addEventListener('click', () => {
   currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', currentTheme);
   localStorage.setItem('chikisetTheme', currentTheme);
-  document.getElementById('themeToggle').textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+  themeBtn.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
 });
 
-function saveLogs() { localStorage.setItem('workoutLogs', JSON.stringify(logs)); }
-function keyFor(cat, name) { return cat + '::' + name; }
+/* ---------- Persisted State ---------- */
+let logs = {};       
+let schedule = [];    
+let sessions = {};    
 
-/* ---------- Render Category Sidebar List ---------- */
-const catListEl = document.getElementById('catList');
-const cats = Object.keys(DB);
+function loadAll(){
+  try{ logs = JSON.parse(localStorage.getItem('workoutLogs')||'{}'); }catch(e){ logs={}; }
+  try{ schedule = JSON.parse(localStorage.getItem('workoutSchedule')||'[]'); }catch(e){ schedule=[]; }
+  try{ sessions = JSON.parse(localStorage.getItem('workoutSessions')||'{}'); }catch(e){ sessions={}; }
+}
+function saveLogs(){ try{ localStorage.setItem('workoutLogs', JSON.stringify(logs)); }catch(e){} }
+function saveSchedule(){ try{ localStorage.setItem('workoutSchedule', JSON.stringify(schedule)); }catch(e){} }
+function saveSessions(){ try{ localStorage.setItem('workoutSessions', JSON.stringify(sessions)); }catch(e){} }
+loadAll();
 
-function renderCatList() {
-  catListEl.innerHTML = '';
-  const allItem = document.createElement('div');
-  allItem.className = 'cat-item' + (activeCat === 'ALL' ? ' active' : '');
-  allItem.innerHTML = '<span>⚡ ทั้งหมด</span>';
-  allItem.addEventListener('click', () => selectCategory('ALL'));
-  catListEl.appendChild(allItem);
-
-  cats.forEach(cat => {
-    const item = document.createElement('div');
-    item.className = 'cat-item' + (activeCat === cat ? ' active' : '');
-    item.innerHTML = `<span>${cat.split(' (')[0]}</span>`;
-    item.addEventListener('click', () => selectCategory(cat));
-    catListEl.appendChild(item);
-  });
+function keyFor(cat,name){ return cat+'::'+name; }
+function todayStr(){
+  const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 
-function selectCategory(cat) {
-  activeCat = cat;
-  renderCatList();
+/* ---------- Main Tab Switching ---------- */
+document.querySelectorAll('.main-tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    document.querySelectorAll('.main-tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    const v = t.dataset.view;
+    document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+    document.getElementById('view-'+v).classList.add('active');
+    document.getElementById('tabs').style.display = v==='library' ? 'flex' : 'none';
+    document.querySelector('.search-wrap').style.display = v==='library' ? 'block' : 'none';
+  });
+});
+
+/* ================= LIBRARY VIEW ================= */
+const tabsEl = document.getElementById('tabs');
+const libView = document.getElementById('library-list-col');
+const cats = Object.keys(DB);
+let activeCat = 'ALL';
+
+const allTab = document.createElement('div');
+allTab.className='tab active'; allTab.textContent='ทั้งหมด'; allTab.dataset.cat='ALL';
+tabsEl.appendChild(allTab);
+cats.forEach(c=>{
+  const t = document.createElement('div');
+  t.className='tab'; t.textContent = c.split(' (')[0]; t.dataset.cat=c;
+  tabsEl.appendChild(t);
+});
+tabsEl.addEventListener('click', e=>{
+  const t = e.target.closest('.tab'); if(!t) return;
+  selectCategory(t.dataset.cat);
+});
+document.getElementById('search').addEventListener('input', renderLibrary);
+
+function selectCategory(catName) {
+  activeCat = catName;
+  document.querySelectorAll('.tab').forEach(x => {
+    x.classList.toggle('active', x.dataset.cat === activeCat);
+  });
+  
+  // Highlight active muscle path in SVG
   document.querySelectorAll('.muscle-path').forEach(p => {
     p.classList.toggle('active', p.dataset.cat === activeCat);
   });
-  renderStage();
+
+  const badgeText = document.getElementById('activeMuscleText');
+  if(badgeText) {
+    badgeText.textContent = activeCat === 'ALL' ? 'แสดงทุกหมวดหมู่' : activeCat;
+  }
+
+  renderLibrary();
 }
 
-/* ---------- Render Exercises in Zero-Scroll Grid ---------- */
-const exGrid = document.getElementById('exGrid');
-document.getElementById('search').addEventListener('input', renderStage);
-
-function renderStage() {
+function renderLibrary(){
   const q = document.getElementById('search').value.trim().toLowerCase();
-  exGrid.innerHTML = '';
-  let count = 0;
-
-  cats.forEach(cat => {
-    if (activeCat !== 'ALL' && activeCat !== cat) return;
-    const list = DB[cat].filter(([name]) => !q || name.toLowerCase().includes(q));
-    list.forEach(([name, eq]) => {
-      count++;
-      exGrid.appendChild(buildCompactCard(cat, name, eq));
-    });
+  libView.innerHTML = '';
+  let any = false;
+  cats.forEach(cat=>{
+    if(activeCat!=='ALL' && activeCat!==cat) return;
+    const exs = DB[cat].filter(([name])=> !q || name.toLowerCase().includes(q));
+    if(exs.length===0) return;
+    any = true;
+    const h = document.createElement('div'); h.className='cat-title'; h.textContent = cat;
+    libView.appendChild(h);
+    exs.forEach(([name,eq])=> libView.appendChild(buildExCard(cat,name,eq)));
   });
-
-  document.getElementById('stageTitle').textContent = activeCat === 'ALL' ? '💪 ทุกหมวดหมู่' : activeCat;
-  document.getElementById('stageCount').textContent = count + ' ท่า';
-
-  if (count === 0) {
-    exGrid.innerHTML = '<div class="empty">ไม่พบท่าออกกำลังกาย</div>';
-  }
+  if(!any) libView.innerHTML = '<div class="empty">ไม่พบท่าออกกำลังกายที่คุณค้นหา ลองคำอื่นดูครับ</div>';
 }
 
-function buildCompactCard(cat, name, eq) {
-  const k = keyFor(cat, name);
+function buildExCard(cat,name,eq){
+  const k = keyFor(cat,name);
   const sets = logs[k] || [];
-  const card = document.createElement('div');
-  card.className = 'compact-card';
-
+  const card = document.createElement('div'); card.className='ex-card';
   card.innerHTML = `
-    <div class="card-head">
-      <div>
-        <div class="card-title">${name}</div>
-        <div class="card-eq">${eq}</div>
+    <div class="ex-head">
+      <div><div class="ex-name">${name}</div><div class="ex-eq">${eq}</div></div>
+      <div class="ex-meta"><span class="set-count">${sets.length} เซ็ต</span><span class="chevron">▾</span></div>
+    </div>
+    <div class="ex-body">
+      <div class="set-labels"><span>#</span><span>น้ำหนัก (กก.)</span><span>จำนวนครั้ง</span><span></span></div>
+      <div class="sets-holder"></div>
+      <div class="ex-actions">
+        <button class="btn-mini accent" data-act="add">+ เพิ่มเซ็ต</button>
+        <button class="btn-mini" data-act="rest">⏱ พัก 90s</button>
       </div>
-      <span class="set-badge">${sets.length} เซ็ต</span>
-    </div>
-    <div class="compact-sets"></div>
-    <div class="compact-actions">
-      <button class="btn-fast accent" data-act="add">+ เซ็ต</button>
-      <button class="btn-fast" data-act="rest">⏱ 90s</button>
-    </div>
-  `;
-
-  const setsWrap = card.querySelector('.compact-sets');
-
-  function paintSets() {
-    setsWrap.innerHTML = '';
-    sets.forEach((s, i) => {
-      const row = document.createElement('div');
-      row.className = 'compact-set-row';
-      row.innerHTML = `
-        <span class="set-num">${i + 1}</span>
-        <div class="input-num-wrap">
-          <button class="step-btn" data-step="-2.5">-</button>
-          <input class="compact-input" type="number" step="0.5" placeholder="กก." value="${s.w ?? ''}">
-          <button class="step-btn" data-step="+2.5">+</button>
-        </div>
-        <div class="input-num-wrap">
-          <button class="step-btn" data-step="-1">-</button>
-          <input class="compact-input" type="number" step="1" placeholder="ครั้ง" value="${s.r ?? ''}">
-          <button class="step-btn" data-step="+1">+</button>
-        </div>
-        <button class="btn-fast-del">×</button>
-      `;
-
-      const inputs = row.querySelectorAll('input');
-      const [wInp, rInp] = inputs;
-      const delBtn = row.querySelector('.btn-fast-del');
-      const stepBtns = row.querySelectorAll('.step-btn');
-
-      wInp.addEventListener('input', e => { s.w = e.target.value; logs[k] = sets; saveLogs(); });
-      rInp.addEventListener('input', e => { s.r = e.target.value; logs[k] = sets; saveLogs(); });
-
-      stepBtns[0].addEventListener('click', () => { s.w = Math.max(0, (parseFloat(s.w) || 0) - 2.5); wInp.value = s.w; saveLogs(); });
-      stepBtns[1].addEventListener('click', () => { s.w = (parseFloat(s.w) || 0) + 2.5; wInp.value = s.w; saveLogs(); });
-      stepBtns[2].addEventListener('click', () => { s.r = Math.max(0, (parseInt(s.r) || 0) - 1); rInp.value = s.r; saveLogs(); });
-      stepBtns[3].addEventListener('click', () => { s.r = (parseInt(s.r) || 0) + 1; rInp.value = s.r; saveLogs(); });
-
-      delBtn.addEventListener('click', () => {
-        sets.splice(i, 1); logs[k] = sets; saveLogs();
-        card.querySelector('.set-badge').textContent = sets.length + ' เซ็ต';
-        paintSets();
-      });
-
-      setsWrap.appendChild(row);
+    </div>`;
+  const setsHolder = card.querySelector('.sets-holder');
+  function paint(){
+    setsHolder.innerHTML='';
+    sets.forEach((s,i)=>{
+      const row = document.createElement('div'); row.className='set-row';
+      row.innerHTML = `<span class="idx">${i+1}</span>
+        <input type="number" step="0.5" placeholder="กก." value="${s.w??''}">
+        <input type="number" step="1" placeholder="ครั้ง" value="${s.r??''}">
+        <button class="del-set">×</button>`;
+      const [,wInp,rInp,delBtn] = row.children;
+      wInp.addEventListener('input', e=>{ s.w=e.target.value; logs[k]=sets; saveLogs(); });
+      rInp.addEventListener('input', e=>{ s.r=e.target.value; logs[k]=sets; saveLogs(); });
+      delBtn.addEventListener('click', ()=>{ sets.splice(i,1); logs[k]=sets; saveLogs();
+        card.querySelector('.set-count').textContent=sets.length+' เซ็ต'; paint(); });
+      setsHolder.appendChild(row);
     });
   }
-
-  paintSets();
-
-  card.querySelector('[data-act="add"]').addEventListener('click', () => {
-    const lastSet = sets[sets.length - 1] || { w: '20', r: '10' };
-    sets.push({ w: lastSet.w, r: lastSet.r });
-    logs[k] = sets;
-    saveLogs();
-    card.querySelector('.set-badge').textContent = sets.length + ' เซ็ต';
-    paintSets();
+  paint();
+  card.querySelector('.ex-head').addEventListener('click', ()=> card.classList.toggle('open'));
+  card.querySelector('[data-act="add"]').addEventListener('click', e=>{
+    e.stopPropagation(); sets.push({w:'',r:''}); logs[k]=sets; saveLogs();
+    card.querySelector('.set-count').textContent=sets.length+' เซ็ต'; paint();
   });
-
-  card.querySelector('[data-act="rest"]').addEventListener('click', () => startFastTimer(90));
-
+  card.querySelector('[data-act="rest"]').addEventListener('click', e=>{
+    e.stopPropagation(); startHeaderTimer(90);
+  });
   return card;
 }
+renderLibrary();
 
-/* ---------- Anatomy Front/Back & Click Selector ---------- */
+/* ---------- Anatomy SVG Front/Back Toggle & Clicks ---------- */
 const btnFront = document.getElementById('btnFront');
 const btnBack = document.getElementById('btnBack');
 const svgFront = document.getElementById('svgFront');
 const svgBack = document.getElementById('svgBack');
 
 btnFront.addEventListener('click', () => {
-  btnFront.classList.add('active'); btnBack.classList.remove('active');
-  svgFront.style.display = 'block'; svgBack.style.display = 'none';
+  btnFront.classList.add('active');
+  btnBack.classList.remove('active');
+  svgFront.style.display = 'block';
+  svgBack.style.display = 'none';
 });
 
 btnBack.addEventListener('click', () => {
-  btnBack.classList.add('active'); btnFront.classList.remove('active');
-  svgFront.style.display = 'none'; svgBack.style.display = 'block';
+  btnBack.classList.add('active');
+  btnFront.classList.remove('active');
+  svgFront.style.display = 'none';
+  svgBack.style.display = 'block';
 });
 
-document.querySelectorAll('.muscle-path').forEach(p => {
-  p.addEventListener('click', () => selectCategory(p.dataset.cat));
+document.querySelectorAll('.muscle-path').forEach(path => {
+  path.addEventListener('click', () => {
+    const cat = path.dataset.cat;
+    selectCategory(cat);
+  });
 });
 
-/* ---------- Fast Rest Timer ---------- */
-let timerSec = 90, timerRunning = false, timerHandle = null;
+/* ================= HEADER REST TIMER ================= */
+let headerSec = 90, headerRunning = false, headerTimerHandle = null;
 const timerDigits = document.getElementById('timerDigits');
-const timerStartBtn = document.getElementById('timerStartBtn');
+const headerTimerBtn = document.getElementById('headerTimerBtn');
 
-function startFastTimer(sec) {
-  timerSec = sec;
-  updateTimerUI();
-  if (timerRunning) clearInterval(timerHandle);
-  timerRunning = true;
-  timerStartBtn.textContent = 'หยุด';
-  timerHandle = setInterval(() => {
-    timerSec--;
-    if (timerSec <= 0) {
-      clearInterval(timerHandle);
-      timerRunning = false;
-      timerStartBtn.textContent = 'เริ่มใหม่';
+document.querySelectorAll('.timer-preset').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.timer-preset').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    headerSec = parseInt(btn.dataset.sec);
+    updateHeaderTimerUI();
+  });
+});
+
+function startHeaderTimer(sec) {
+  if(sec) headerSec = sec;
+  updateHeaderTimerUI();
+  if (headerRunning) clearInterval(headerTimerHandle);
+  headerRunning = true;
+  headerTimerBtn.textContent = 'หยุด';
+  headerTimerHandle = setInterval(() => {
+    headerSec--;
+    if (headerSec <= 0) {
+      headerSec = 0;
+      clearInterval(headerTimerHandle);
+      headerRunning = false;
+      headerTimerBtn.textContent = 'เริ่มใหม่';
       try {
         const ctx = new AudioContext();
         const o = ctx.createOscillator(); o.connect(ctx.destination);
         o.start(); o.stop(ctx.currentTime + 0.3);
       } catch (e) {}
+      if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
     }
-    updateTimerUI();
+    updateHeaderTimerUI();
   }, 1000);
 }
 
-function updateTimerUI() {
-  const m = String(Math.floor(timerSec / 60)).padStart(2, '0');
-  const s = String(timerSec % 60).padStart(2, '0');
+function updateHeaderTimerUI() {
+  const m = String(Math.floor(headerSec / 60)).padStart(2, '0');
+  const s = String(headerSec % 60).padStart(2, '0');
   timerDigits.textContent = `${m}:${s}`;
 }
 
-timerStartBtn.addEventListener('click', () => {
-  if (timerRunning) {
-    clearInterval(timerHandle); timerRunning = false; timerStartBtn.textContent = 'เริ่ม';
+headerTimerBtn.addEventListener('click', () => {
+  if (headerRunning) {
+    clearInterval(headerTimerHandle);
+    headerRunning = false;
+    headerTimerBtn.textContent = 'เริ่มพัก';
   } else {
-    startFastTimer(90);
+    startHeaderTimer();
   }
 });
 
-/* Initial Setup */
-renderCatList();
-renderStage();
+/* ================= SCHEDULE VIEW ================= */
+const schedView = document.getElementById('view-schedule');
+let pickerTargetDay = null;
+
+function renderSchedule(){
+  schedView.innerHTML = '';
+  const toolbar = document.createElement('div'); toolbar.className='sched-toolbar';
+  toolbar.innerHTML = `
+    <div class="new-day-form">
+      <input id="newDayName" placeholder="สร้างชื่อวันฝึกใหม่ เช่น Day 1 - อก/ไตรเซ็ป">
+      <button class="btn-mini accent" id="addDayBtn">+ สร้างวันใหม่</button>
+    </div>`;
+  schedView.appendChild(toolbar);
+  document.getElementById('addDayBtn').addEventListener('click', ()=>{
+    const inp = document.getElementById('newDayName');
+    const name = inp.value.trim();
+    if(!name) return;
+    schedule.push({id: 'd'+Date.now(), name, exercises:[]});
+    saveSchedule(); inp.value=''; renderSchedule();
+  });
+
+  if(schedule.length===0){
+    const e = document.createElement('div'); e.className='empty';
+    e.textContent = 'ยังไม่มีวันฝึก — เริ่มต้นสร้างวันฝึกวันแรกของคุณได้เลยข้างบนนี้!';
+    schedView.appendChild(e); return;
+  }
+
+  schedule.forEach(day=> schedView.appendChild(buildDayCard(day)));
+}
+
+function buildDayCard(day){
+  const card = document.createElement('div'); card.className='day-card';
+  const sessCount = Object.keys(sessions[day.id]||{}).length;
+  card.innerHTML = `
+    <div class="day-head">
+      <div>
+        <div class="day-name">${day.name}</div>
+        <div class="day-sub">${day.exercises.length} ท่า · ฝึกไปแล้ว ${sessCount} ครั้ง</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="day-del" title="ลบวันนี้">🗑</button>
+        <span class="chevron">▾</span>
+      </div>
+    </div>
+    <div class="day-body"></div>`;
+  card.querySelector('.day-head').addEventListener('click', e=>{
+    if(e.target.closest('.day-del')) return;
+    card.classList.toggle('open');
+    if(card.classList.contains('open')) paintDayBody();
+  });
+  card.querySelector('.day-del').addEventListener('click', ()=>{
+    schedule = schedule.filter(d=>d.id!==day.id);
+    delete sessions[day.id];
+    saveSchedule(); saveSessions(); renderSchedule();
+  });
+
+  let currentDate = todayStr();
+  function paintDayBody(){
+    const body = card.querySelector('.day-body');
+    const daySessions = sessions[day.id] = sessions[day.id] || {};
+    const pastDates = Object.keys(daySessions).sort().reverse();
+
+    body.innerHTML = `
+      <div class="date-row">
+        <label style="font-size:13px;color:var(--text-muted);font-weight:500;">เลือกวันที่ฝึก:</label>
+        <input type="date" id="dateInput-${day.id}" value="${currentDate}">
+        <button class="btn-mini accent" data-act="addex">+ เพิ่มท่าในวันนี้</button>
+      </div>
+      ${pastDates.length? `<div class="history-chips" id="chips-${day.id}"></div>`:''}
+      <div id="exlist-${day.id}"></div>
+      <div class="streak-strip" id="streak-${day.id}"></div>
+    `;
+
+    const dateInput = body.querySelector(`#dateInput-${day.id}`);
+    dateInput.addEventListener('change', e=>{ currentDate = e.target.value; paintExList(); paintChips(); });
+
+    body.querySelector('[data-act="addex"]').addEventListener('click', ()=> openPicker(day));
+
+    function paintChips(){
+      const chipsWrap = body.querySelector(`#chips-${day.id}`);
+      if(!chipsWrap) return;
+      chipsWrap.innerHTML = '';
+      pastDates.slice(0,10).forEach(dt=>{
+        const c = document.createElement('span');
+        c.className = 'chip'+(dt===todayStr()?' today':'')+(dt===currentDate?' active':'');
+        c.textContent = dt;
+        c.addEventListener('click', ()=>{ currentDate = dt; dateInput.value = dt; paintExList(); paintChips(); });
+        chipsWrap.appendChild(c);
+      });
+    }
+    paintChips();
+
+    function paintExList(){
+      const listEl = body.querySelector(`#exlist-${day.id}`);
+      listEl.innerHTML = '';
+      if(day.exercises.length===0){
+        listEl.innerHTML = '<div class="empty">ยังไม่มีท่าในวันนี้ กด "+ เพิ่มท่าในวันนี้" ด้านบน</div>';
+        renderStreak(); return;
+      }
+      const dateSets = daySessions[currentDate] = daySessions[currentDate] || {};
+      day.exercises.forEach((ex,exi)=>{
+        const k = keyFor(ex.cat, ex.name);
+        const sets = dateSets[k] = dateSets[k] || [];
+        const exCard = document.createElement('div'); exCard.className='ex-card';
+        exCard.innerHTML = `
+          <div class="ex-head">
+            <div><div class="ex-name">${ex.name}</div><div class="ex-eq">${ex.eq}</div></div>
+            <div class="ex-meta">
+              <span class="set-count">${sets.length} เซ็ต</span>
+              <button class="btn-mini ghost" data-act="rmex" title="เอาท่านี้ออกจากวัน">ลบท่า</button>
+              <span class="chevron">▾</span>
+            </div>
+          </div>
+          <div class="ex-body">
+            <div class="set-labels"><span>#</span><span>น้ำหนัก (กก.)</span><span>จำนวนครั้ง</span><span></span></div>
+            <div class="sets-holder"></div>
+            <div class="ex-actions">
+              <button class="btn-mini accent" data-act="add">+ เพิ่มเซ็ต</button>
+              <button class="btn-mini" data-act="rest">⏱ พัก 90s</button>
+            </div>
+          </div>`;
+        const holder = exCard.querySelector('.sets-holder');
+        function paintSets(){
+          holder.innerHTML='';
+          sets.forEach((s,i)=>{
+            const row = document.createElement('div'); row.className='set-row';
+            row.innerHTML = `<span class="idx">${i+1}</span>
+              <input type="number" step="0.5" placeholder="กก." value="${s.w??''}">
+              <input type="number" step="1" placeholder="ครั้ง" value="${s.r??''}">
+              <button class="del-set">×</button>`;
+            const [,wInp,rInp,delBtn] = row.children;
+            wInp.addEventListener('input', e=>{ s.w=e.target.value; saveSessions(); });
+            rInp.addEventListener('input', e=>{ s.r=e.target.value; saveSessions(); });
+            delBtn.addEventListener('click', ()=>{ sets.splice(i,1); saveSessions();
+              exCard.querySelector('.set-count').textContent=sets.length+' เซ็ต'; paintSets(); });
+            holder.appendChild(row);
+          });
+        }
+        paintSets();
+        exCard.querySelector('.ex-head').addEventListener('click', e=>{
+          if(e.target.closest('[data-act="rmex"]')) return;
+          exCard.classList.toggle('open');
+        });
+        exCard.querySelector('[data-act="add"]').addEventListener('click', e=>{
+          e.stopPropagation(); sets.push({w:'',r:''}); saveSessions();
+          exCard.querySelector('.set-count').textContent=sets.length+' เซ็ต'; paintSets();
+        });
+        exCard.querySelector('[data-act="rest"]').addEventListener('click', e=>{
+          e.stopPropagation(); startHeaderTimer(90);
+        });
+        exCard.querySelector('[data-act="rmex"]').addEventListener('click', e=>{
+          e.stopPropagation();
+          day.exercises.splice(exi,1); saveSchedule();
+          paintExList();
+          card.querySelector('.day-sub').textContent = `${day.exercises.length} ท่า · ฝึกไปแล้ว ${Object.keys(daySessions).length} ครั้ง`;
+        });
+        listEl.appendChild(exCard);
+      });
+      renderStreak();
+    }
+    paintExList();
+
+    function renderStreak(){
+      const strip = body.querySelector(`#streak-${day.id}`);
+      strip.innerHTML = '';
+      for(let i=6;i>=0;i--){
+        const d = new Date(); d.setDate(d.getDate()-i);
+        const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+        const hit = !!daySessions[ds] && Object.values(daySessions[ds]).some(arr=>arr.length>0);
+        const cell = document.createElement('div');
+        cell.className = 'streak-day'+(hit?' hit':'');
+        cell.textContent = ['อา','จ','อ','พ','พฤ','ศ','ส'][d.getDay()];
+        strip.appendChild(cell);
+      }
+    }
+  }
+  return card;
+}
+renderSchedule();
+
+/* ---------- Modal Exercise Picker ---------- */
+const pickerOverlay = document.getElementById('pickerOverlay');
+const pickerSearch = document.getElementById('pickerSearch');
+const pickerList = document.getElementById('pickerList');
+
+function openPicker(day){
+  pickerTargetDay = day;
+  pickerOverlay.classList.add('open');
+  pickerSearch.value=''; paintPicker();
+  pickerSearch.focus();
+}
+document.getElementById('pickerClose').addEventListener('click', ()=> pickerOverlay.classList.remove('open'));
+pickerOverlay.addEventListener('click', e=>{ if(e.target===pickerOverlay) pickerOverlay.classList.remove('open'); });
+pickerSearch.addEventListener('input', paintPicker);
+
+function paintPicker(){
+  const q = pickerSearch.value.trim().toLowerCase();
+  pickerList.innerHTML='';
+  const already = new Set((pickerTargetDay?.exercises||[]).map(e=>keyFor(e.cat,e.name)));
+  const results = FLAT.filter(e=> !q || e.name.toLowerCase().includes(q) || e.cat.toLowerCase().includes(q)).slice(0,60);
+  if(results.length===0){ pickerList.innerHTML='<div class="empty">ไม่พบท่าออกกำลังกาย</div>'; return; }
+  results.forEach(e=>{
+    const k = keyFor(e.cat,e.name);
+    const row = document.createElement('div'); row.className='pick-item';
+    row.innerHTML = `<div><div style="font-weight:500;">${e.name}</div><div class="p-cat">${e.cat}</div></div>
+      <button class="pick-add">${already.has(k)?'เพิ่มแล้ว':'+ เพิ่ม'}</button>`;
+    const btn = row.querySelector('.pick-add');
+    if(already.has(k)) btn.disabled = true;
+    btn.addEventListener('click', ()=>{
+      pickerTargetDay.exercises.push({cat:e.cat,name:e.name,eq:e.eq});
+      saveSchedule();
+      btn.textContent='เพิ่มแล้ว'; btn.disabled=true;
+      renderSchedule();
+      setTimeout(()=>{
+        const cards = document.querySelectorAll('.day-card');
+        cards.forEach(c=>{ if(c.querySelector('.day-name').textContent===pickerTargetDay.name) c.classList.add('open'); });
+      },0);
+    });
+    pickerList.appendChild(row);
+  });
+}
 </script>
 </body>
 </html>
