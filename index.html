@@ -46,7 +46,7 @@
 
 [data-theme="dark"] {
   --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  --panel-bg: rgba(30, 41, 59, 0.82);
+  --panel-bg: rgba(30, 41, 59, 0.85);
   --panel-solid: #1e293b;
   --panel-sub: rgba(15, 23, 42, 0.7);
   --border-color: rgba(255, 255, 255, 0.08);
@@ -70,7 +70,8 @@ body {
   color: var(--text-main);
   font-family: 'Kanit', sans-serif;
   -webkit-font-smoothing: antialiased;
-  padding-bottom: 60px;
+  padding-bottom: 30px;
+  overflow-x: hidden;
 }
 
 ::selection {
@@ -78,7 +79,7 @@ body {
   color: #ffffff;
 }
 
-/* Header */
+/* Header Compact for Zero Scroll */
 header {
   position: sticky;
   top: 0;
@@ -87,7 +88,7 @@ header {
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border-bottom: 1px solid var(--border-color);
-  padding: 14px 24px 0;
+  padding: 10px 24px 0;
   box-shadow: var(--shadow-sm);
 }
 
@@ -95,7 +96,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
   max-width: 1280px;
   margin: 0 auto;
@@ -108,24 +109,24 @@ header {
 }
 
 .logo-badge {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   background: var(--accent-orange-grad);
-  border-radius: 11px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 17px;
   box-shadow: 0 4px 12px rgba(255, 94, 58, 0.3);
 }
 
 h1 {
   font-family: 'Kanit', sans-serif;
   font-weight: 700;
-  font-size: 24px;
+  font-size: 22px;
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -136,37 +137,37 @@ h1 span {
   -webkit-text-fill-color: transparent;
 }
 
-.tagline { color: var(--text-muted); font-size: 12px; font-weight: 400; }
+.tagline { color: var(--text-muted); font-size: 11.5px; font-weight: 400; }
 
 /* Integrated Header Rest Timer */
 .header-timer-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: var(--panel-sub);
   border: 1px solid var(--border-line);
   border-radius: var(--radius-full);
-  padding: 4px 12px;
+  padding: 3px 10px;
 }
 
-.timer-label-text { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+.timer-label-text { font-size: 11.5px; font-weight: 600; color: var(--text-muted); }
 
 .timer-display {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--accent-orange);
-  min-width: 48px;
+  min-width: 44px;
 }
 
 .timer-btn {
   font-family: 'Kanit', sans-serif;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   border: none;
   background: var(--accent-orange-grad);
   color: #ffffff;
-  padding: 4px 12px;
+  padding: 3px 10px;
   border-radius: var(--radius-full);
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(255, 94, 58, 0.25);
@@ -175,11 +176,11 @@ h1 span {
 
 .timer-preset {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 10.5px;
   background: var(--panel-solid);
   border: 1px solid var(--border-line);
   color: var(--text-muted);
-  padding: 2px 7px;
+  padding: 2px 6px;
   border-radius: var(--radius-full);
   cursor: pointer;
 }
@@ -190,24 +191,24 @@ h1 span {
   font-weight: 600;
 }
 
-.header-actions { display: flex; align-items: center; gap: 10px; }
+.header-actions { display: flex; align-items: center; gap: 8px; }
 .search-wrap { position: relative; }
 
 .search {
   background: var(--panel-sub);
   border: 1px solid var(--border-line);
   border-radius: var(--radius-full);
-  padding: 8px 16px 8px 36px;
+  padding: 6px 14px 6px 32px;
   color: var(--text-main);
   font-family: 'Kanit', sans-serif;
-  font-size: 13.5px;
-  width: 210px;
+  font-size: 13px;
+  width: 190px;
   outline: none;
   transition: var(--transition-smooth);
 }
 
 .search:focus {
-  width: 230px;
+  width: 210px;
   background: var(--panel-solid);
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px var(--accent-subtle);
@@ -215,39 +216,39 @@ h1 span {
 
 .search-icon {
   position: absolute;
-  left: 13px;
+  left: 11px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-light);
-  font-size: 13px;
+  font-size: 12px;
   pointer-events: none;
 }
 
 .icon-btn {
-  width: 36px; height: 36px;
+  width: 32px; height: 32px;
   border-radius: var(--radius-full);
   border: 1px solid var(--border-line);
   background: var(--panel-sub);
   color: var(--text-main);
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 15px;
+  cursor: pointer; font-size: 14px;
 }
 
 /* Nav & Filter Chips Bar */
-.nav-wrap { max-width: 1280px; margin: 12px auto 0; }
+.nav-wrap { max-width: 1280px; margin: 8px auto 0; }
 
-.main-tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--border-line); }
+.main-tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--border-line); }
 
 .main-tab {
   font-family: 'Kanit', sans-serif;
   font-weight: 500;
-  font-size: 15px;
-  padding: 8px 16px;
+  font-size: 14px;
+  padding: 6px 14px;
   color: var(--text-muted);
   cursor: pointer;
   border-bottom: 2px solid transparent;
   transition: var(--transition-smooth);
-  display: flex; align-items: center; gap: 6px;
+  display: flex; align-items: center; gap: 5px;
 }
 
 .main-tab.active {
@@ -257,8 +258,8 @@ h1 span {
 }
 
 .tabs {
-  display: flex; gap: 6px; overflow-x: auto;
-  padding: 10px 0 4px; scrollbar-width: none;
+  display: flex; gap: 5px; overflow-x: auto;
+  padding: 8px 0 2px; scrollbar-width: none;
   max-width: 1280px; margin: 0 auto;
 }
 
@@ -266,11 +267,11 @@ h1 span {
 
 .tab {
   flex: none;
-  font-size: 12.5px; font-weight: 500;
+  font-size: 12px; font-weight: 500;
   background: var(--panel-bg);
   border: 1px solid var(--border-line);
   color: var(--text-muted);
-  padding: 5px 13px;
+  padding: 4px 11px;
   border-radius: var(--radius-full);
   cursor: pointer;
   white-space: nowrap;
@@ -286,13 +287,13 @@ h1 span {
   box-shadow: 0 3px 10px var(--accent-glow);
 }
 
-/* Layout Wrapper */
-.wrap { max-width: 1280px; margin: 20px auto 0; padding: 0 20px; }
+/* Layout Wrapper for Zero Scroll */
+.wrap { max-width: 1280px; margin: 12px auto 0; padding: 0 16px; }
 
 .split-container {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 20px;
+  grid-template-columns: 1fr 310px;
+  gap: 16px;
   align-items: start;
 }
 
@@ -304,51 +305,64 @@ h1 span {
 .view { display: none; }
 .view.active { display: block; }
 
-/* 3D Hyper-Realistic Muscle Anatomy Panel */
+/* Left Scrollable Exercise List */
+#library-list-col {
+  max-height: calc(100vh - 165px);
+  overflow-y: auto;
+  padding-right: 6px;
+}
+#library-list-col::-webkit-scrollbar { width: 5px; }
+#library-list-col::-webkit-scrollbar-thumb { background: var(--border-line); border-radius: 99px; }
+
+/* Eye-Level Zero-Scroll 3D Muscle Panel */
 .anatomy-panel {
   position: sticky;
-  top: 130px;
+  top: 105px;
   background: var(--panel-bg);
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 18px;
+  padding: 12px;
   box-shadow: var(--shadow-md);
   text-align: center;
+  max-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .anatomy-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 8px;
 }
 
 .anatomy-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-main);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .view-toggle {
   display: flex;
   background: var(--panel-sub);
-  padding: 3px;
+  padding: 2px;
   border-radius: var(--radius-full);
   border: 1px solid var(--border-line);
 }
 
 .toggle-btn {
   font-family: 'Kanit', sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   border: none;
   background: transparent;
   color: var(--text-muted);
-  padding: 4px 14px;
+  padding: 3px 11px;
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: var(--transition-smooth);
@@ -361,13 +375,14 @@ h1 span {
   box-shadow: var(--shadow-sm);
 }
 
-/* 1:1 Calibrated 3D Blue Model Container (290 x 780 aspect ratio) */
+/* 1:1 Perfectly Calibrated Eye-Level Container */
 .blue-anatomy-container {
   position: relative;
   width: 100%;
-  max-width: 250px;
+  max-width: 220px;
   margin: 0 auto;
-  aspect-ratio: 290 / 780;
+  max-height: calc(100vh - 215px);
+  height: 420px;
   border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--panel-sub);
@@ -416,26 +431,26 @@ h1 span {
 .active-muscle-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   background: var(--accent-orange-grad);
   color: #fff;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
-  padding: 5px 14px;
+  padding: 4px 12px;
   border-radius: var(--radius-full);
-  margin-top: 14px;
+  margin-top: 8px;
   box-shadow: 0 4px 12px rgba(255, 94, 58, 0.3);
 }
 
 /* Cards & Exercise Lists */
 .cat-title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--accent-primary);
-  margin: 20px 0 10px;
+  margin: 14px 0 8px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .cat-title::after {
@@ -449,7 +464,7 @@ h1 span {
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
   transition: var(--transition-smooth);
@@ -464,30 +479,30 @@ h1 span {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: 10px 14px;
   cursor: pointer;
-  gap: 12px;
+  gap: 10px;
 }
 
-.ex-name { font-size: 15px; font-weight: 600; color: var(--text-main); }
-.ex-eq { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.ex-name { font-size: 14.5px; font-weight: 600; color: var(--text-main); }
+.ex-eq { font-size: 11.5px; color: var(--text-muted); margin-top: 1px; }
 
 .set-count {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   color: var(--accent-primary);
   background: var(--accent-subtle);
-  padding: 3px 9px;
+  padding: 2px 8px;
   border-radius: var(--radius-full);
 }
 
-.chevron { color: var(--text-light); transition: transform 0.2s; font-size: 12px; }
+.chevron { color: var(--text-light); transition: transform 0.2s; font-size: 11px; }
 .ex-card.open .chevron { transform: rotate(180deg); color: var(--accent-primary); }
 
 .ex-body {
   display: none;
-  padding: 0 16px 16px;
+  padding: 0 14px 14px;
   border-top: 1px solid var(--border-line);
   background: var(--panel-sub);
 }
@@ -496,27 +511,27 @@ h1 span {
 
 .set-labels {
   display: grid;
-  grid-template-columns: 32px 1fr 1fr 36px;
-  gap: 8px;
-  font-size: 11px;
+  grid-template-columns: 30px 1fr 1fr 32px;
+  gap: 6px;
+  font-size: 10.5px;
   font-weight: 600;
   color: var(--text-muted);
-  margin-top: 12px;
+  margin-top: 10px;
   padding: 0 4px;
 }
 
 .set-row {
   display: grid;
-  grid-template-columns: 32px 1fr 1fr 36px;
-  gap: 8px;
+  grid-template-columns: 30px 1fr 1fr 32px;
+  gap: 6px;
   align-items: center;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .set-row .idx {
   font-family: 'JetBrains Mono', monospace;
   color: var(--text-muted);
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   text-align: center;
 }
@@ -526,8 +541,8 @@ h1 span {
   border: 1px solid var(--border-line);
   border-radius: var(--radius-sm);
   color: var(--text-main);
-  padding: 7px 10px;
-  font-size: 13.5px;
+  padding: 6px 8px;
+  font-size: 13px;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 500;
   width: 100%;
@@ -543,23 +558,23 @@ h1 span {
   background: none;
   border: none;
   color: var(--text-light);
-  font-size: 17px;
+  font-size: 16px;
   cursor: pointer;
   border-radius: 6px;
-  width: 32px; height: 32px;
+  width: 30px; height: 30px;
   display: flex; align-items: center; justify-content: center;
 }
 
 .del-set:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
 
-.ex-actions { display: flex; gap: 8px; margin-top: 12px; }
+.ex-actions { display: flex; gap: 6px; margin-top: 10px; }
 
 .btn-mini {
   font-family: 'Kanit', sans-serif;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 500;
   border-radius: var(--radius-sm);
-  padding: 7px 13px;
+  padding: 6px 11px;
   cursor: pointer;
   border: 1px solid var(--border-line);
   background: var(--panel-solid);
@@ -577,9 +592,9 @@ h1 span {
 
 .empty {
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13.5px;
   text-align: center;
-  padding: 40px 20px;
+  padding: 30px 16px;
   background: var(--panel-bg);
   border: 1px dashed var(--border-line);
   border-radius: var(--radius-lg);
@@ -590,21 +605,21 @@ h1 span {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   gap: 10px; flex-wrap: wrap;
 }
 
-.new-day-form { display: flex; gap: 8px; width: 100%; max-width: 480px; }
+.new-day-form { display: flex; gap: 6px; width: 100%; max-width: 440px; }
 
 .new-day-form input {
   flex: 1;
   background: var(--panel-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 9px 14px;
+  padding: 8px 12px;
   color: var(--text-main);
   font-family: 'Kanit', sans-serif;
-  font-size: 14px;
+  font-size: 13.5px;
   outline: none;
 }
 
@@ -613,7 +628,7 @@ h1 span {
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
 }
@@ -622,41 +637,41 @@ h1 span {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 14px 16px;
   cursor: pointer;
   gap: 10px;
 }
 
-.day-name { font-size: 17px; font-weight: 600; color: var(--text-main); }
-.day-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.day-name { font-size: 16px; font-weight: 600; color: var(--text-main); }
+.day-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
 
-.day-del { background: none; border: none; color: var(--text-light); font-size: 16px; cursor: pointer; padding: 4px; }
+.day-del { background: none; border: none; color: var(--text-light); font-size: 15px; cursor: pointer; padding: 4px; }
 .day-del:hover { color: #ef4444; }
 
-.day-body { display: none; padding: 0 20px 20px; border-top: 1px solid var(--border-line); background: var(--panel-sub); }
+.day-body { display: none; padding: 0 16px 16px; border-top: 1px solid var(--border-line); background: var(--panel-sub); }
 .day-card.open .day-body { display: block; }
 
-.date-row { display: flex; align-items: center; gap: 10px; margin: 16px 0; flex-wrap: wrap; }
+.date-row { display: flex; align-items: center; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
 
 .date-row input[type="date"] {
   background: var(--panel-solid);
   border: 1px solid var(--border-line);
   border-radius: var(--radius-sm);
   color: var(--text-main);
-  padding: 6px 10px;
+  padding: 5px 8px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
+  font-size: 12.5px;
 }
 
-.history-chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0 4px; }
+.history-chips { display: flex; gap: 5px; flex-wrap: wrap; margin: 8px 0 4px; }
 
 .chip {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 10.5px;
   background: var(--panel-solid);
   border: 1px solid var(--border-line);
   color: var(--text-muted);
-  padding: 4px 9px;
+  padding: 3px 8px;
   border-radius: var(--radius-full);
   cursor: pointer;
 }
@@ -664,15 +679,15 @@ h1 span {
 .chip.today { border-color: var(--good-green); color: var(--good-green); background: var(--good-bg); }
 .chip.active { background: var(--accent-primary); border-color: var(--accent-primary); color: #ffffff; }
 
-.streak-strip { display: flex; gap: 5px; margin-top: 16px; }
+.streak-strip { display: flex; gap: 4px; margin-top: 12px; }
 
 .streak-day {
   flex: 1;
   text-align: center;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 10px;
   color: var(--text-muted);
-  padding: 6px 0;
+  padding: 5px 0;
   border-radius: var(--radius-sm);
   background: var(--panel-solid);
   border: 1px solid var(--border-line);
@@ -688,7 +703,7 @@ h1 span {
   backdrop-filter: blur(8px);
   z-index: 100;
   align-items: center; justify-content: center;
-  padding: 20px;
+  padding: 16px;
 }
 
 .picker-overlay.open { display: flex; }
@@ -697,40 +712,40 @@ h1 span {
   background: var(--panel-solid);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  width: 100%; max-width: 480px;
-  padding: 20px; max-height: 80vh; overflow-y: auto;
+  width: 100%; max-width: 440px;
+  padding: 18px; max-height: 80vh; overflow-y: auto;
   box-shadow: var(--shadow-lg);
 }
 
-.picker-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.picker-head h3 { font-size: 18px; font-weight: 600; color: var(--text-main); }
-.picker-close { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
+.picker-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.picker-head h3 { font-size: 16.5px; font-weight: 600; color: var(--text-main); }
+.picker-close { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; }
 
 .picker-search {
   width: 100%;
   background: var(--panel-sub);
   border: 1px solid var(--border-line);
   border-radius: var(--radius-md);
-  padding: 9px 12px;
+  padding: 8px 11px;
   color: var(--text-main);
   font-family: 'Kanit', sans-serif;
-  font-size: 14px;
-  margin-bottom: 12px;
+  font-size: 13.5px;
+  margin-bottom: 10px;
   outline: none;
 }
 
-.pick-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 4px; border-bottom: 1px solid var(--border-line); font-size: 13.5px; }
-.pick-item .p-cat { font-size: 10.5px; color: var(--text-muted); }
+.pick-item { display: flex; justify-content: space-between; align-items: center; padding: 7px 4px; border-bottom: 1px solid var(--border-line); font-size: 13px; }
+.pick-item .p-cat { font-size: 10px; color: var(--text-muted); }
 
 .pick-add {
   background: var(--panel-sub);
   border: 1px solid var(--border-line);
   color: var(--text-main);
   border-radius: var(--radius-sm);
-  padding: 5px 10px; font-size: 12px; cursor: pointer;
+  padding: 4px 9px; font-size: 11.5px; cursor: pointer;
 }
 
-footer { max-width: 1280px; margin: 30px auto 0; padding: 0 20px; color: var(--text-muted); font-size: 11.5px; text-align: center; }
+footer { max-width: 1280px; margin: 20px auto 0; padding: 0 16px; color: var(--text-muted); font-size: 11px; text-align: center; }
 
 </style>
 </head>
@@ -781,7 +796,7 @@ footer { max-width: 1280px; margin: 30px auto 0; padding: 0 20px; color: var(--t
     <div class="split-container">
       <div id="library-list-col"></div>
       
-      <!-- 3D Blue Hyper-Realistic Muscle Model Panel -->
+      <!-- Compact Eye-Level 3D Blue Muscle Model Panel -->
       <div class="anatomy-panel">
         <div class="anatomy-header">
           <div class="anatomy-title"><span>🧬</span> จิ้มมัดกล้ามเนื้อ (3D Model)</div>
@@ -792,77 +807,77 @@ footer { max-width: 1280px; margin: 30px auto 0; padding: 0 20px; color: var(--t
         </div>
 
         <div class="blue-anatomy-container">
-          <!-- Blue Model Front Image -->
-          <img src="blue_front.png" alt="3D Blue Muscle Front Model" class="blue-body-img" id="imgFront">
+          <!-- Fixed Intact Head Blue Model Front Image -->
+          <img src="front_head_ok.png" alt="3D Blue Muscle Front Model" class="blue-body-img" id="imgFront">
           
-          <!-- Blue Model Back Image -->
-          <img src="blue_back.png" alt="3D Blue Muscle Back Model" class="blue-body-img" id="imgBack" style="display:none;">
+          <!-- Fixed Intact Head Blue Model Back Image -->
+          <img src="back_head_ok.png" alt="3D Blue Muscle Back Model" class="blue-body-img" id="imgBack" style="display:none;">
 
-          <!-- 1:1 Pixel-Calibrated Front Hotspots (290 x 780) -->
-          <svg class="svg-hotspot-overlay" id="svgFront" viewBox="0 0 290 780">
+          <!-- 1:1 Pixel-Calibrated Front Hotspots (380 x 1024) -->
+          <svg class="svg-hotspot-overlay" id="svgFront" viewBox="0 0 380 1024">
             <!-- Chest (อก) -->
-            <path class="hotspot-path" data-cat="อก (Chest)" d="M96 112 Q145 105 145 180 L98 180 Q90 145 96 112 Z" title="อก (Chest)"/>
-            <path class="hotspot-path" data-cat="อก (Chest)" d="M194 112 Q145 105 145 180 L192 180 Q200 145 194 112 Z" title="อก (Chest)"/>
+            <path class="hotspot-path" data-cat="อก (Chest)" d="M135 170 Q190 160 190 260 L135 260 Q120 215 135 170 Z" title="อก (Chest)"/>
+            <path class="hotspot-path" data-cat="อก (Chest)" d="M245 170 Q190 160 190 260 L245 260 Q260 215 245 170 Z" title="อก (Chest)"/>
 
             <!-- Shoulders / Front Delts (ไหล่หน้า) -->
-            <path class="hotspot-path" data-cat="ไหล่หน้า (Front Delts)" d="M52 110 Q94 102 96 118 L78 165 Q48 145 52 110 Z" title="ไหล่หน้า (Front Delts)"/>
-            <path class="hotspot-path" data-cat="ไหล่หน้า (Front Delts)" d="M238 110 Q196 102 194 118 L212 165 Q242 145 238 110 Z" title="ไหล่หน้า (Front Delts)"/>
+            <path class="hotspot-path" data-cat="ไหล่หน้า (Front Delts)" d="M75 170 Q130 160 135 180 L110 240 Q65 210 75 170 Z" title="ไหล่หน้า (Front Delts)"/>
+            <path class="hotspot-path" data-cat="ไหล่หน้า (Front Delts)" d="M305 170 Q250 160 245 180 L270 240 Q315 210 305 170 Z" title="ไหล่หน้า (Front Delts)"/>
 
             <!-- Shoulders / Side Delts (ไหล่ข้าง) -->
-            <path class="hotspot-path" data-cat="ไหล่ข้าง (Side Delts)" d="M34 122 Q54 112 56 125 L40 172 Q24 150 34 122 Z" title="ไหล่ข้าง (Side Delts)"/>
-            <path class="hotspot-path" data-cat="ไหล่ข้าง (Side Delts)" d="M256 122 Q236 112 234 125 L250 172 Q266 150 256 122 Z" title="ไหล่ข้าง (Side Delts)"/>
+            <path class="hotspot-path" data-cat="ไหล่ข้าง (Side Delts)" d="M45 190 Q75 175 80 195 L55 260 Q35 230 45 190 Z" title="ไหล่ข้าง (Side Delts)"/>
+            <path class="hotspot-path" data-cat="ไหล่ข้าง (Side Delts)" d="M335 190 Q305 175 300 195 L325 260 Q345 230 335 190 Z" title="ไหล่ข้าง (Side Delts)"/>
 
             <!-- Biceps (ไบเซ็ป) -->
-            <path class="hotspot-path" data-cat="ไบเซ็ป (Biceps)" d="M26 182 Q60 192 48 262 L28 252 Q20 210 26 182 Z" title="ไบเซ็ป (Biceps)"/>
-            <path class="hotspot-path" data-cat="ไบเซ็ป (Biceps)" d="M264 182 Q230 192 242 262 L262 252 Q270 210 264 182 Z" title="ไบเซ็ป (Biceps)"/>
+            <path class="hotspot-path" data-cat="ไบเซ็ป (Biceps)" d="M35 260 Q80 275 65 370 L35 355 Q25 295 35 260 Z" title="ไบเซ็ป (Biceps)"/>
+            <path class="hotspot-path" data-cat="ไบเซ็ป (Biceps)" d="M345 260 Q300 275 315 370 L345 355 Q355 295 345 260 Z" title="ไบเซ็ป (Biceps)"/>
 
             <!-- Forearms (ปลายแขน) -->
-            <path class="hotspot-path" data-cat="ปลายแขน (Forearms)" d="M12 268 Q46 276 34 372 L16 362 Q6 310 12 268 Z" title="ปลายแขน (Forearms)"/>
-            <path class="hotspot-path" data-cat="ปลายแขน (Forearms)" d="M278 268 Q244 276 256 372 L274 362 Q284 310 278 268 Z" title="ปลายแขน (Forearms)"/>
+            <path class="hotspot-path" data-cat="ปลายแขน (Forearms)" d="M18 370 Q60 380 45 510 L22 495 Q10 425 18 370 Z" title="ปลายแขน (Forearms)"/>
+            <path class="hotspot-path" data-cat="ปลายแขน (Forearms)" d="M362 370 Q320 380 335 510 L358 495 Q370 425 362 370 Z" title="ปลายแขน (Forearms)"/>
 
             <!-- Abs / Core (แกนกลางลำตัว / หน้าท้อง 6-pack) -->
-            <path class="hotspot-path" data-cat="แกนกลางลำตัว (Abs/Core)" d="M98 185 L192 185 L182 342 L108 342 Z" title="หน้าท้อง/แกนกลาง (Abs/Core)"/>
+            <path class="hotspot-path" data-cat="แกนกลางลำตัว (Abs/Core)" d="M135 260 L245 260 L232 470 L148 470 Z" title="หน้าท้อง/แกนกลาง (Abs/Core)"/>
 
             <!-- Quads / Thighs (ต้นขาหน้า) -->
-            <path class="hotspot-path" data-cat="ต้นขาหน้า (Quads)" d="M78 348 Q143 348 143 555 L90 540 Q70 450 78 348 Z" title="ต้นขาหน้า (Quads)"/>
-            <path class="hotspot-path" data-cat="ต้นขาหน้า (Quads)" d="M212 348 Q147 348 147 555 L200 540 Q220 450 212 348 Z" title="ต้นขาหน้า (Quads)"/>
+            <path class="hotspot-path" data-cat="ต้นขาหน้า (Quads)" d="M100 470 Q188 470 188 770 L120 750 Q90 630 100 470 Z" title="ต้นขาหน้า (Quads)"/>
+            <path class="hotspot-path" data-cat="ต้นขาหน้า (Quads)" d="M280 470 Q192 470 192 770 L260 750 Q290 630 280 470 Z" title="ต้นขาหน้า (Quads)"/>
 
             <!-- Calves (น่อง) -->
-            <path class="hotspot-path" data-cat="น่อง (Calves)" d="M82 568 Q136 568 128 720 L96 710 Q80 650 82 568 Z" title="น่อง (Calves)"/>
-            <path class="hotspot-path" data-cat="น่อง (Calves)" d="M208 568 Q154 568 162 720 L194 710 Q210 650 208 568 Z" title="น่อง (Calves)"/>
+            <path class="hotspot-path" data-cat="น่อง (Calves)" d="M105 775 Q178 775 168 970 L128 955 Q105 880 105 775 Z" title="น่อง (Calves)"/>
+            <path class="hotspot-path" data-cat="น่อง (Calves)" d="M275 775 Q202 775 212 970 L252 955 Q275 880 275 775 Z" title="น่อง (Calves)"/>
           </svg>
 
-          <!-- 1:1 Pixel-Calibrated Back Hotspots (290 x 780) -->
-          <svg class="svg-hotspot-overlay" id="svgBack" viewBox="0 0 290 780" style="display:none;">
+          <!-- 1:1 Pixel-Calibrated Back Hotspots (366 x 1024) -->
+          <svg class="svg-hotspot-overlay" id="svgBack" viewBox="0 0 366 1024" style="display:none;">
             <!-- Traps / Upper Back (หลังบน) -->
-            <path class="hotspot-path" data-cat="หลังบน (Upper Back/Traps)" d="M88 88 L202 88 L225 168 L145 208 L65 168 Z" title="หลังบน/สะบัก (Traps)"/>
+            <path class="hotspot-path" data-cat="หลังบน (Upper Back/Traps)" d="M110 170 L256 170 L286 280 L183 330 L80 280 Z" title="หลังบน/สะบัก (Traps)"/>
 
             <!-- Rear Delts (ไหล่หลัง) -->
-            <path class="hotspot-path" data-cat="ไหล่หลัง (Rear Delts)" d="M45 108 Q88 102 92 118 L76 162 Q45 145 45 108 Z" title="ไหล่หลัง (Rear Delts)"/>
-            <path class="hotspot-path" data-cat="ไหล่หลัง (Rear Delts)" d="M245 108 Q202 102 198 118 L214 162 Q245 145 245 108 Z" title="ไหล่หลัง (Rear Delts)"/>
+            <path class="hotspot-path" data-cat="ไหล่หลัง (Rear Delts)" d="M55 190 Q110 180 115 200 L95 250 Q55 230 55 190 Z" title="ไหล่หลัง (Rear Delts)"/>
+            <path class="hotspot-path" data-cat="ไหล่หลัง (Rear Delts)" d="M311 190 Q256 180 251 200 L271 250 Q311 230 311 190 Z" title="ไหล่หลัง (Rear Delts)"/>
 
             <!-- Lats (ปีก) -->
-            <path class="hotspot-path" data-cat="ปีก (Lats)" d="M65 172 L145 212 L138 308 L78 275 Z" title="ปีก (Lats)"/>
-            <path class="hotspot-path" data-cat="ปีก (Lats)" d="M225 172 L145 212 L152 308 L212 275 Z" title="ปีก (Lats)"/>
+            <path class="hotspot-path" data-cat="ปีก (Lats)" d="M80 280 L183 330 L175 420 L98 380 Z" title="ปีก (Lats)"/>
+            <path class="hotspot-path" data-cat="ปีก (Lats)" d="M286 280 L183 330 L191 420 L268 380 Z" title="ปีก (Lats)"/>
 
             <!-- Lower Back (หลังล่าง) -->
-            <path class="hotspot-path" data-cat="หลังล่าง (Lower Back)" d="M122 250 L168 250 L164 340 L126 340 Z" title="หลังล่าง (Lower Back)"/>
+            <path class="hotspot-path" data-cat="หลังล่าง (Lower Back)" d="M150 340 L216 340 L210 450 L156 450 Z" title="หลังล่าง (Lower Back)"/>
 
             <!-- Triceps Back (ไตรเซ็ป) -->
-            <path class="hotspot-path" data-cat="ไตรเซ็ป (Triceps)" d="M20 162 Q62 172 52 248 L26 238 Z" title="ไตรเซ็ป (Triceps)"/>
-            <path class="hotspot-path" data-cat="ไตรเซ็ป (Triceps)" d="M270 162 Q228 172 238 248 L264 238 Z" title="ไตรเซ็ป (Triceps)"/>
+            <path class="hotspot-path" data-cat="ไตรเซ็ป (Triceps)" d="M25 230 Q80 245 68 350 L35 335 Z" title="ไตรเซ็ป (Triceps)"/>
+            <path class="hotspot-path" data-cat="ไตรเซ็ป (Triceps)" d="M341 230 Q286 245 298 350 L331 335 Z" title="ไตรเซ็ป (Triceps)"/>
 
             <!-- Glutes (สะโพก) -->
-            <path class="hotspot-path" data-cat="สะโพก (Glutes)" d="M80 342 L145 342 L138 430 L84 420 Z" title="สะโพก (Glutes)"/>
-            <path class="hotspot-path" data-cat="สะโพก (Glutes)" d="M210 342 L145 342 L152 430 L206 420 Z" title="สะโพก (Glutes)"/>
+            <path class="hotspot-path" data-cat="สะโพก (Glutes)" d="M100 450 L183 450 L175 570 L105 555 Z" title="สะโพก (Glutes)"/>
+            <path class="hotspot-path" data-cat="สะโพก (Glutes)" d="M266 450 L183 450 L191 570 L261 555 Z" title="สะโพก (Glutes)"/>
 
             <!-- Hamstrings (ต้นขาหลัง) -->
-            <path class="hotspot-path" data-cat="ต้นขาหลัง (Hamstrings)" d="M82 432 L138 432 L130 568 L88 558 Z" title="ต้นขาหลัง (Hamstrings)"/>
-            <path class="hotspot-path" data-cat="ต้นขาหลัง (Hamstrings)" d="M208 432 L152 432 L160 568 L202 558 Z" title="ต้นขาหลัง (Hamstrings)"/>
+            <path class="hotspot-path" data-cat="ต้นขาหลัง (Hamstrings)" d="M105 570 L178 570 L168 770 L112 755 Z" title="ต้นขาหลัง (Hamstrings)"/>
+            <path class="hotspot-path" data-cat="ต้นขาหลัง (Hamstrings)" d="M261 570 L188 570 L198 770 L254 755 Z" title="ต้นขาหลัง (Hamstrings)"/>
 
             <!-- Calves Back (น่อง) -->
-            <path class="hotspot-path" data-cat="น่อง (Calves)" d="M75 572 L135 572 L125 725 L92 715 Z" title="น่อง (Calves)"/>
-            <path class="hotspot-path" data-cat="น่อง (Calves)" d="M215 572 L155 572 L165 725 L198 715 Z" title="น่อง (Calves)"/>
+            <path class="hotspot-path" data-cat="น่อง (Calves)" d="M95 770 L170 770 L158 970 L115 955 Z" title="น่อง (Calves)"/>
+            <path class="hotspot-path" data-cat="น่อง (Calves)" d="M271 770 L196 770 L208 970 L251 955 Z" title="น่อง (Calves)"/>
           </svg>
         </div>
 
