@@ -640,6 +640,28 @@ h1 span {
   box-shadow: 0 3px 10px var(--accent-glow);
 }
 
+.btn-recommend {
+  background: var(--accent-orange-grad);
+  border: none;
+  color: #ffffff;
+  font-family: 'Kanit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 94, 58, 0.3);
+  transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-recommend:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(255, 94, 58, 0.4);
+}
+
 .empty {
   color: var(--text-muted);
   font-size: 13.5px;
@@ -685,13 +707,17 @@ h1 span {
   margin-top: 14px;
   padding-top: 14px;
   border-top: 1px solid var(--border-line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .template-title {
   font-size: 12.5px;
   font-weight: 600;
   color: var(--text-muted);
-  margin-bottom: 8px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -839,6 +865,78 @@ h1 span {
 }
 
 .streak-day.hit { background: var(--accent-subtle); border-color: var(--accent-primary); color: var(--accent-primary); font-weight: 700; }
+
+/* Quiz Recommendation Modal Styles */
+.quiz-box {
+  background: var(--panel-solid);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  width: 100%; max-width: 520px;
+  padding: 22px; max-height: 85vh; overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.quiz-step-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.quiz-step-desc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quiz-opt-btn {
+  background: var(--panel-sub);
+  border: 1px solid var(--border-line);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.quiz-opt-btn:hover {
+  border-color: var(--accent-primary);
+  background: var(--accent-subtle);
+}
+
+.quiz-opt-btn.selected {
+  border-color: var(--accent-orange);
+  background: rgba(255, 94, 58, 0.12);
+}
+
+.quiz-opt-btn .opt-title {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.quiz-opt-btn .opt-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.quiz-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-line);
+}
 
 /* Modal Picker */
 .picker-overlay {
@@ -1079,6 +1177,17 @@ footer { max-width: 1280px; margin: 20px auto 0; padding: 0 16px; color: var(--t
 <footer>
   รายการท่าออกกำลังกายครอบคลุมท่าหลักในยิม (~140 ท่า) | บันทึกประวัติและตารางในเบราว์เซอร์อัตโนมัติ (localStorage)
 </footer>
+
+<!-- Modal Personalized Recommendation Quiz -->
+<div class="picker-overlay" id="quizOverlay">
+  <div class="quiz-box">
+    <div class="picker-head">
+      <h3 style="display:flex;align-items:center;gap:6px;"><span>🤖</span> ระบบจัดตารางออกกำลังกายเฉพาะบุคคล</h3>
+      <button class="picker-close" id="quizClose">×</button>
+    </div>
+    <div id="quizContent"></div>
+  </div>
+</div>
 
 <!-- Modal Target Day Selector -->
 <div class="picker-overlay" id="dayTargetOverlay">
@@ -1672,6 +1781,364 @@ headerTimerBtn.addEventListener('click', () => {
   }
 });
 
+/* ================= PERSONALIZED QUIZ RECOMMENDATION ENGINE ================= */
+const quizOverlay = document.getElementById('quizOverlay');
+const quizClose = document.getElementById('quizClose');
+const quizContent = document.getElementById('quizContent');
+
+let quizAnswers = { goal: null, days: null, location: null, level: null };
+let quizStep = 1;
+
+function openQuizModal() {
+  quizStep = 1;
+  quizAnswers = { goal: null, days: null, location: null, level: null };
+  quizOverlay.classList.add('open');
+  renderQuizStep();
+}
+
+quizClose.addEventListener('click', () => quizOverlay.classList.remove('open'));
+quizOverlay.addEventListener('click', e => { if (e.target === quizOverlay) quizOverlay.classList.remove('open'); });
+
+function renderQuizStep() {
+  quizContent.innerHTML = '';
+
+  if (quizStep === 1) {
+    quizContent.innerHTML = `
+      <div class="quiz-step-title">คำถามที่ 1/4: เป้าหมายหลักในการฝึกของคุณคืออะไร?</div>
+      <div class="quiz-step-desc">เลือกรูปแบบผลลัพธ์ที่คุณต้องการเน้นย้ำมากที่สุด</div>
+      <div class="quiz-options">
+        <button class="quiz-opt-btn" onclick="setQuizAnswer('goal', 'muscle', 2)">
+          <div>
+            <div class="opt-title">🏋️‍♂️ สร้างกล้ามเนื้อ (Hypertrophy)</div>
+            <div class="opt-sub">เน้นเพิ่มขนาดมัดกล้ามเนื้อให้ใหญ่และคมชัดขึ้น</div>
+          </div>
+          <span>➔</span>
+        </button>
+        <button class="quiz-opt-btn" onclick="setQuizAnswer('goal', 'strength', 2)">
+          <div>
+            <div class="opt-title">⚡ เพิ่มความแข็งแรง & พลัง (Strength & Power)</div>
+            <div class="opt-sub">เน้นยกหนักขึ้น เล่นท่า Compound หลักได้แข็งแกร่ง</div>
+          </div>
+          <span>➔</span>
+        </button>
+        <button class="quiz-opt-btn" onclick="setQuizAnswer('goal', 'fatloss', 2)">
+          <div>
+            <div class="opt-title">🔥 ลดไขมัน & กระชับสัดส่วน (Fat Loss & Toning)</div>
+            <div class="opt-sub">เน้นเผาผลาญแคลอรี เพิ่มความกระชับและความอึด</div>
+          </div>
+          <span>➔</span>
+        </button>
+      </div>
+    `;
+  } else if (quizStep === 2) {
+    quizContent.innerHTML = `
+      <div class="quiz-step-title">คำถามที่ 2/4: คุณมีเวลาฝึกกี่วันต่อสัปดาห์?</div>
+      <div class="quiz-step-desc">ระบบจะจัดตารางวันที่เหมาะสมกับตารางชีวิตของคุณ</div>
+      <div class="quiz-options">
+        <button class="quiz-opt-btn" onclick="setQuizAnswer('days', '2-3', 3)">
+          <div>
+            <div class="opt-title">📅 2 - 3 วันต่อสัปดาห์</div>
+            <div class="opt-sub">เหมาะสำหรับผู้มีเวลาน้อย แต่เก็บครบทุกมัดกล้ามเนื้อ</div>
+          </div>
+          <span>➔</span>
+        </button>
+        <button class="quiz-opt-btn" onclick="setQuizAnswer('days', '4', 3)">
+          <div>
+            <div class="opt-title">📅 4 วันต่อสัปดาห์</div>
+            <div class="opt-sub">จัดตารางแบบแบ่ง Upper / Lower เล่นกำลังดี พักผ่อนเต็มที่</div>
+          </div>
+          <span>➔</span>
+        </button>
+        <button class="quiz-opt-btn" onclick="setQuizAnswer('days', '5-6', 3)">
+          <div>
+            <div class="opt-title">📅 5 - 6 วันต่อสัปดาห์</div>
+            <div class="opt-sub">สำหรับสายขยัน จัดตาราง PPL เจาะจงแต่ละมัดแบบจัดเต็ม</div>
+          </div>
+          <span>➔</span>
+        </button>
+      </div>
+      <div class="quiz-nav">
+        <button class="btn-mini" onclick="quizStep=1;renderQuizStep();">← ย้อนกลับ</button>
+      </div>
+    `;
+  } else if (quizStep === 3) {
+    quizContent.innerHTML = `
+      <div class="quiz-step-title">คำถามที่ 3/4: สถานที่และอุปกรณ์ที่คุณใช้?</div>
+      <div class="quiz-step-desc">เพื่อเลือกท่าที่มีอุปกรณ์รองรับจริงในสถานที่ฝึกของคุณ</div>
+      <div class="quiz-options">
+        <button class="quiz-opt-btn" onclick="setQuizAnswer('location', 'gym', 4)">
+          <div>
+            <div class="opt-title">🏛 ยิมใหญ่ / ฟิตเนส (Full Gym)</div>
+            <div class="opt-sub">มีอุปกรณ์ครบ บาร์เบล, ดัมเบล, เครื่องเล่น และสายเคเบิล</div>
+          </div>
+          <span>➔</span>
+        </button>
+        <button class="quiz-opt-btn" onclick="setQuizAnswer('location', 'home', 4)">
+          <div>
+            <div class="opt-title">🏠 โฮมยิม / ฝึกที่บ้าน (Home Workout)</div>
+            <div class="opt-sub">มีดัมเบล บาร์โหน หรือเน้นใช้น้ำหนักตัว (Bodyweight)</div>
+          </div>
+          <span>➔</span>
+        </button>
+      </div>
+      <div class="quiz-nav">
+        <button class="btn-mini" onclick="quizStep=2;renderQuizStep();">← ย้อนกลับ</button>
+      </div>
+    `;
+  } else if (quizStep === 4) {
+    quizContent.innerHTML = `
+      <div class="quiz-step-title">คำถามที่ 4/4: ระดับประสบการณ์ของคุณ?</div>
+      <div class="quiz-step-desc">ปรับความเข้มข้นและจำนวนท่าให้พอดีกับร่างกาย</div>
+      <div class="quiz-options">
+        <button class="quiz-opt-btn" onclick="setQuizAnswer('level', 'beginner', 5)">
+          <div>
+            <div class="opt-title">🔰 มือใหม่ (Beginner)</div>
+            <div class="opt-sub">เพิ่งเริ่มฝึกหรือเล่นไม่เกิน 6 เดือน เน้นท่าพื้นฐานที่ถูกต้อง</div>
+          </div>
+          <span>➔</span>
+        </button>
+        <button class="quiz-opt-btn" onclick="setQuizAnswer('level', 'intermediate', 5)">
+          <div>
+            <div class="opt-title">⚡ ระดับปานกลาง - ขยัน (Intermediate)</div>
+            <div class="opt-sub">ฝึกต่อเนื่องเกิน 6 เดือน ร่างกายคุ้นเคยกับน้ำหนักหนัก</div>
+          </div>
+          <span>➔</span>
+        </button>
+      </div>
+      <div class="quiz-nav">
+        <button class="btn-mini" onclick="quizStep=3;renderQuizStep();">← ย้อนกลับ</button>
+      </div>
+    `;
+  } else if (quizStep === 5) {
+    generatePersonalizedProgram();
+  }
+}
+
+function setQuizAnswer(key, val, nextStep) {
+  quizAnswers[key] = val;
+  quizStep = nextStep;
+  renderQuizStep();
+}
+
+function generatePersonalizedProgram() {
+  const { goal, days, location, level } = quizAnswers;
+  let recName = "";
+  let recDesc = "";
+  let generatedDays = [];
+
+  const isHome = location === 'home';
+
+  if (days === '2-3') {
+    recName = goal === 'fatloss' ? "🔥 Full Body Cardio & Tone (3 วัน)" : "🏆 Personalized Full Body (3 วัน)";
+    recDesc = `คำแนะนำเฉพาะบุคคล: เหมาะกับฝึก 2-3 วัน/สัปดาห์ ที่ ${isHome ? 'บ้าน' : 'ยิม'} (${goal === 'muscle' ? 'เน้นสร้างกล้ามเนื้อ' : goal === 'strength' ? 'เน้นเพิ่มพละกำลัง' : 'เน้นเผาผลาญลดไขมัน'})`;
+    
+    generatedDays = [
+      {
+        name: "Day 1 - Full Body A (อก/หลัง/ขา)",
+        exercises: isHome ? [
+          {cat:"อก (Chest)", name:"Dumbbell Bench Press", eq:"ดัมเบล"},
+          {cat:"ปีก (Lats)", name:"Dumbbell Row", eq:"ดัมเบล"},
+          {cat:"ต้นขาหน้า (Quads)", name:"Goblet Squat", eq:"ดัมเบล/เคทเทิลเบล"},
+          {cat:"ไหล่หน้า (Front Delts)", name:"Dumbbell Shoulder Press", eq:"ดัมเบล"},
+          {cat:"แกนกลางลำตัว (Abs/Core)", name:"Plank", eq:"น้ำหนักตัว"}
+        ] : [
+          {cat:"อก (Chest)", name:"Barbell Bench Press", eq:"บาร์เบล"},
+          {cat:"ปีก (Lats)", name:"Lat Pulldown", eq:"เคเบิล"},
+          {cat:"ต้นขาหน้า (Quads)", name:"Back Squat", eq:"บาร์เบล"},
+          {cat:"ไหล่หน้า (Front Delts)", name:"Overhead Press (Barbell)", eq:"บาร์เบล"},
+          {cat:"แกนกลางลำตัว (Abs/Core)", name:"Hanging Leg Raise", eq:"บาร์โหน"}
+        ]
+      },
+      {
+        name: "Day 2 - Full Body B (ขาหลัง/ไหล่/แขน)",
+        exercises: isHome ? [
+          {cat:"ต้นขาหลัง (Hamstrings)", name:"Romanian Deadlift", eq:"บาร์เบล/ดัมเบล"},
+          {cat:"หลังบน (Upper Back)", name:"Dumbbell Row", eq:"ดัมเบล"},
+          {cat:"ไหล่ข้าง (Side Delts)", name:"Lateral Raise", eq:"ดัมเบล"},
+          {cat:"ไบเซ็ป (Biceps)", name:"Dumbbell Curl", eq:"ดัมเบล"},
+          {cat:"ไตรเซ็ป (Triceps)", name:"Overhead Tricep Extension", eq:"ดัมเบล"}
+        ] : [
+          {cat:"ต้นขาหลัง (Hamstrings)", name:"Romanian Deadlift", eq:"บาร์เบล"},
+          {cat:"หลังบน (Upper Back)", name:"Seated Wide-Grip Cable Row", eq:"เคเบิล"},
+          {cat:"ไหล่ข้าง (Side Delts)", name:"Cable Lateral Raise", eq:"เคเบิล"},
+          {cat:"ไบเซ็ป (Biceps)", name:"Barbell Curl", eq:"บาร์เบล"},
+          {cat:"ไตรเซ็ป (Triceps)", name:"Tricep Pushdown", eq:"เคเบิล"}
+        ]
+      },
+      {
+        name: "Day 3 - Full Body C (เก็บมัดสร้างทรง)",
+        exercises: isHome ? [
+          {cat:"อกบน (Upper Chest)", name:"Incline Dumbbell Press", eq:"ดัมเบล"},
+          {cat:"ต้นขาหน้า (Quads)", name:"Bulgarian Split Squat", eq:"ดัมเบล"},
+          {cat:"ปีก (Lats)", name:"Pull-Up", eq:"น้ำหนักตัว"},
+          {cat:"ไหล่หลัง (Rear Delts)", name:"Rear Delt Fly", eq:"ดัมเบล"},
+          {cat:"หน้าท้องข้าง (Obliques)", name:"Russian Twist", eq:"น้ำหนักตัว/ดัมเบล"}
+        ] : [
+          {cat:"อกบน (Upper Chest)", name:"Incline Barbell Bench Press", eq:"บาร์เบล"},
+          {cat:"ต้นขาหน้า (Quads)", name:"Leg Press", eq:"เครื่อง"},
+          {cat:"ปีก (Lats)", name:"Pull-Up", eq:"น้ำหนักตัว"},
+          {cat:"ไหล่หลัง (Rear Delts)", name:"Face Pull", eq:"เคเบิล"},
+          {cat:"หน้าท้องข้าง (Obliques)", name:"Cable Woodchopper", eq:"เคเบิล"}
+        ]
+      }
+    ];
+  } else if (days === '4') {
+    recName = "⚡ Upper / Lower Split (4 วัน)";
+    recDesc = `คำแนะนำเฉพาะบุคคล: โปรแกรมส่วนบนและส่วนล่าง 4 วัน (${isHome ? 'ใช้อุปกรณ์ดัมเบลที่บ้าน' : 'ใช้อุปกรณ์ยิมเต็มรูปแบบ'})`;
+    
+    generatedDays = [
+      {
+        name: "Day 1 - Upper Body A (เน้นอก/ปีก)",
+        exercises: isHome ? [
+          {cat:"อก (Chest)", name:"Dumbbell Bench Press", eq:"ดัมเบล"},
+          {cat:"ปีก (Lats)", name:"Dumbbell Row", eq:"ดัมเบล"},
+          {cat:"ไหล่หน้า (Front Delts)", name:"Dumbbell Shoulder Press", eq:"ดัมเบล"},
+          {cat:"ไบเซ็ป (Biceps)", name:"Hammer Curl", eq:"ดัมเบล"},
+          {cat:"ไตรเซ็ป (Triceps)", name:"Overhead Tricep Extension", eq:"ดัมเบล"}
+        ] : [
+          {cat:"อก (Chest)", name:"Barbell Bench Press", eq:"บาร์เบล"},
+          {cat:"ปีก (Lats)", name:"Lat Pulldown", eq:"เคเบิล"},
+          {cat:"ไหล่หน้า (Front Delts)", name:"Overhead Press (Barbell)", eq:"บาร์เบล"},
+          {cat:"ไบเซ็ป (Biceps)", name:"Barbell Curl", eq:"บาร์เบล"},
+          {cat:"ไตรเซ็ป (Triceps)", name:"Tricep Pushdown", eq:"เคเบิล"}
+        ]
+      },
+      {
+        name: "Day 2 - Lower Body A (เน้นต้นขาหน้า/ก้น)",
+        exercises: isHome ? [
+          {cat:"ต้นขาหน้า (Quads)", name:"Goblet Squat", eq:"ดัมเบล/เคทเทิลเบล"},
+          {cat:"ต้นขาหลัง (Hamstrings)", name:"Romanian Deadlift", eq:"ดัมเบล"},
+          {cat:"ต้นขาหน้า (Quads)", name:"Walking Lunge", eq:"ดัมเบล"},
+          {cat:"แกนกลางลำตัว (Abs/Core)", name:"Plank", eq:"น้ำหนักตัว"}
+        ] : [
+          {cat:"ต้นขาหน้า (Quads)", name:"Back Squat", eq:"บาร์เบล"},
+          {cat:"ต้นขาหลัง (Hamstrings)", name:"Romanian Deadlift", eq:"บาร์เบล"},
+          {cat:"ต้นขาหน้า (Quads)", name:"Leg Extension", eq:"เครื่อง"},
+          {cat:"น่อง (Calves)", name:"Standing Calf Raise", eq:"เครื่อง/บาร์เบล"}
+        ]
+      },
+      {
+        name: "Day 3 - Upper Body B (เน้นหลังบน/ไหล่ข้าง)",
+        exercises: isHome ? [
+          {cat:"อกบน (Upper Chest)", name:"Incline Dumbbell Press", eq:"ดัมเบล"},
+          {cat:"หลังบน (Upper Back)", name:"Dumbbell Row", eq:"ดัมเบล"},
+          {cat:"ไหล่ข้าง (Side Delts)", name:"Lateral Raise", eq:"ดัมเบล"},
+          {cat:"ไหล่หลัง (Rear Delts)", name:"Rear Delt Fly", eq:"ดัมเบล"},
+          {cat:"ไบเซ็ป (Biceps)", name:"Dumbbell Curl", eq:"ดัมเบล"}
+        ] : [
+          {cat:"อกบน (Upper Chest)", name:"Incline Barbell Bench Press", eq:"บาร์เบล"},
+          {cat:"หลังบน (Upper Back)", name:"Barbell Row", eq:"บาร์เบล"},
+          {cat:"ไหล่ข้าง (Side Delts)", name:"Cable Lateral Raise", eq:"เคเบิล"},
+          {cat:"ไหล่หลัง (Rear Delts)", name:"Face Pull", eq:"เคเบิล"},
+          {cat:"ไตรเซ็ป (Triceps)", name:"Close-Grip Bench Press", eq:"บาร์เบล"}
+        ]
+      },
+      {
+        name: "Day 4 - Lower Body B (เน้นต้นขาหลัง/แกนกลาง)",
+        exercises: isHome ? [
+          {cat:"ต้นขาหลัง (Hamstrings)", name:"Romanian Deadlift", eq:"ดัมเบล"},
+          {cat:"ต้นขาหน้า (Quads)", name:"Bulgarian Split Squat", eq:"ดัมเบล"},
+          {cat:"สะโพก (Glutes)", name:"Glute Bridge", eq:"ดัมเบล/น้ำหนักตัว"},
+          {cat:"แกนกลางลำตัว (Abs/Core)", name:"Ab Wheel Rollout", eq:"ล้อเอบ"}
+        ] : [
+          {cat:"หลังล่าง (Lower Back)", name:"Deadlift", eq:"บาร์เบล"},
+          {cat:"ต้นขาหลัง (Hamstrings)", name:"Lying Leg Curl", eq:"เครื่อง"},
+          {cat:"สะโพก (Glutes)", name:"Hip Thrust", eq:"บาร์เบล"},
+          {cat:"แกนกลางลำตัว (Abs/Core)", name:"Hanging Leg Raise", eq:"บาร์โหน"}
+        ]
+      }
+    ];
+  } else {
+    recName = "🔥 Push / Pull / Legs (PPL Custom)";
+    recDesc = `คำแนะนำเฉพาะบุคคล: โปรแกรม PPL ขยันจัดเต็ม 5-6 วัน (${isHome ? 'เวอร์ชันดัมเบลโฮมยิม' : 'เวอร์ชันยิมครบวงจร'})`;
+    
+    generatedDays = [
+      {
+        name: "Day 1 - Push (อก/ไหล่หน้า/ไตรเซ็ป)",
+        exercises: isHome ? [
+          {cat:"อก (Chest)", name:"Dumbbell Bench Press", eq:"ดัมเบล"},
+          {cat:"อกบน (Upper Chest)", name:"Incline Dumbbell Press", eq:"ดัมเบล"},
+          {cat:"ไหล่หน้า (Front Delts)", name:"Dumbbell Shoulder Press", eq:"ดัมเบล"},
+          {cat:"ไหล่ข้าง (Side Delts)", name:"Lateral Raise", eq:"ดัมเบล"},
+          {cat:"ไตรเซ็ป (Triceps)", name:"Overhead Tricep Extension", eq:"ดัมเบล"}
+        ] : [
+          {cat:"อก (Chest)", name:"Barbell Bench Press", eq:"บาร์เบล"},
+          {cat:"อกบน (Upper Chest)", name:"Incline Dumbbell Press", eq:"ดัมเบล"},
+          {cat:"ไหล่หน้า (Front Delts)", name:"Overhead Press (Barbell)", eq:"บาร์เบล"},
+          {cat:"ไหล่ข้าง (Side Delts)", name:"Cable Lateral Raise", eq:"เคเบิล"},
+          {cat:"ไตรเซ็ป (Triceps)", name:"Tricep Pushdown", eq:"เคเบิล"}
+        ]
+      },
+      {
+        name: "Day 2 - Pull (หลัง/ปีก/ไหล่หลัง/ไบเซ็ป)",
+        exercises: isHome ? [
+          {cat:"ปีก (Lats)", name:"Pull-Up", eq:"น้ำหนักตัว"},
+          {cat:"หลังบน (Upper Back)", name:"Dumbbell Row", eq:"ดัมเบล"},
+          {cat:"ไหล่หลัง (Rear Delts)", name:"Rear Delt Fly", eq:"ดัมเบล"},
+          {cat:"ไบเซ็ป (Biceps)", name:"Barbell Curl", eq:"บาร์เบล"},
+          {cat:"ไบเซ็ป (Biceps)", name:"Hammer Curl", eq:"ดัมเบล"}
+        ] : [
+          {cat:"ปีก (Lats)", name:"Lat Pulldown", eq:"เคเบิล"},
+          {cat:"หลังบน (Upper Back)", name:"Barbell Row", eq:"บาร์เบล"},
+          {cat:"ไหล่หลัง (Rear Delts)", name:"Face Pull", eq:"เคเบิล"},
+          {cat:"ไบเซ็ป (Biceps)", name:"Barbell Curl", eq:"บาร์เบล"},
+          {cat:"ไบเซ็ป (Biceps)", name:"Preacher Curl", eq:"บาร์เบล/เครื่อง"}
+        ]
+      },
+      {
+        name: "Day 3 - Legs & Abs (ขา/ท้อง)",
+        exercises: isHome ? [
+          {cat:"ต้นขาหน้า (Quads)", name:"Goblet Squat", eq:"ดัมเบล/เคทเทิลเบล"},
+          {cat:"ต้นขาหลัง (Hamstrings)", name:"Romanian Deadlift", eq:"ดัมเบล"},
+          {cat:"ต้นขาหน้า (Quads)", name:"Bulgarian Split Squat", eq:"ดัมเบล"},
+          {cat:"แกนกลางลำตัว (Abs/Core)", name:"Plank", eq:"น้ำหนักตัว"}
+        ] : [
+          {cat:"ต้นขาหน้า (Quads)", name:"Back Squat", eq:"บาร์เบล"},
+          {cat:"ต้นขาหลัง (Hamstrings)", name:"Romanian Deadlift", eq:"บาร์เบล"},
+          {cat:"ต้นขาหน้า (Quads)", name:"Leg Extension", eq:"เครื่อง"},
+          {cat:"ต้นขาหลัง (Hamstrings)", name:"Lying Leg Curl", eq:"เครื่อง"},
+          {cat:"น่อง (Calves)", name:"Standing Calf Raise", eq:"เครื่อง/บาร์เบล"}
+        ]
+      }
+    ];
+  }
+
+  quizContent.innerHTML = `
+    <div style="text-align:center;padding:10px 0;">
+      <div style="font-size:40px;margin-bottom:8px;">✨</div>
+      <div style="font-size:18px;font-weight:700;color:var(--accent-orange);margin-bottom:4px;">${recName}</div>
+      <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:18px;line-height:1.5;">${recDesc}</div>
+      
+      <div style="background:var(--panel-sub);border:1px solid var(--border-line);border-radius:var(--radius-md);padding:14px;text-align:left;margin-bottom:20px;max-height:220px;overflow-y:auto;">
+        <div style="font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:8px;">รายการวันฝึกในโปรแกรมนี้:</div>
+        ${generatedDays.map(d => `
+          <div style="font-size:12.5px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed var(--border-line);">
+            <div style="font-weight:600;color:var(--accent-primary);">${d.name}</div>
+            <div style="color:var(--text-muted);font-size:11.5px;">${d.exercises.map(e=>e.name).join(', ')}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <button class="btn-recommend" style="width:100%;justify-content:center;padding:12px;font-size:14px;" id="applyQuizProgramBtn">
+        🚀 ยืนยันสร้างโปรแกรมนี้เข้า "ตารางของฉัน"
+      </button>
+    </div>
+  `;
+
+  document.getElementById('applyQuizProgramBtn').addEventListener('click', () => {
+    generatedDays.forEach(d => {
+      schedule.push({
+        id: 'd' + Date.now() + Math.random().toString(36).substr(2,4),
+        name: d.name,
+        exercises: [...d.exercises]
+      });
+    });
+    saveSchedule();
+    quizOverlay.classList.remove('open');
+    renderSchedule();
+  });
+}
+
 /* ================= SCHEDULE VIEW ================= */
 const schedView = document.getElementById('view-schedule');
 let pickerTargetDay = null;
@@ -1710,15 +2177,20 @@ function renderSchedule(){
       <button class="btn-mini accent" id="addDayBtn">+ สร้างวันใหม่</button>
     </div>
     <div class="template-section">
-      <div class="template-title">⚡ ปุ่มลัดสร้างชื่อวันฝึกแบบเร็ว:</div>
-      <div class="template-chips">
-        <button class="tmpl-chip" data-name="Upper Body (ส่วนบน)">💪 Upper Body</button>
-        <button class="tmpl-chip" data-name="Lower Body (ส่วนล่าง)">🦵 Lower Body</button>
-        <button class="tmpl-chip" data-name="Push (อก/ไหล่/ไตรเซ็ป)">🔥 Push</button>
-        <button class="tmpl-chip" data-name="Pull (หลัง/ปีก/ไบเซ็ป)">🎯 Pull</button>
-        <button class="tmpl-chip" data-name="Legs (ขา/ท้อง)">🦵 Legs</button>
-        <button class="tmpl-chip" data-name="Full Body (รวมทุกส่วน)">🏆 Full Body</button>
+      <div>
+        <div class="template-title" style="margin-bottom:8px;">⚡ ปุ่มลัดสร้างชื่อวันฝึกแบบเร็ว:</div>
+        <div class="template-chips">
+          <button class="tmpl-chip" data-name="Upper Body (ส่วนบน)">💪 Upper Body</button>
+          <button class="tmpl-chip" data-name="Lower Body (ส่วนล่าง)">🦵 Lower Body</button>
+          <button class="tmpl-chip" data-name="Push (อก/ไหล่/ไตรเซ็ป)">🔥 Push</button>
+          <button class="tmpl-chip" data-name="Pull (หลัง/ปีก/ไบเซ็ป)">🎯 Pull</button>
+          <button class="tmpl-chip" data-name="Legs (ขา/ท้อง)">🦵 Legs</button>
+          <button class="tmpl-chip" data-name="Full Body (รวมทุกส่วน)">🏆 Full Body</button>
+        </div>
       </div>
+      <button class="btn-recommend" id="openQuizBtn">
+        <span>🤖</span> แนะนำโปรแกรมสำหรับคุณ
+      </button>
     </div>`;
   schedView.appendChild(toolbar);
 
@@ -1730,6 +2202,8 @@ function renderSchedule(){
     inp.value='';
   });
 
+  document.getElementById('openQuizBtn').addEventListener('click', openQuizModal);
+
   toolbar.querySelectorAll('.tmpl-chip').forEach(btn => {
     btn.addEventListener('click', () => {
       createQuickDay(btn.dataset.name);
@@ -1740,8 +2214,13 @@ function renderSchedule(){
     const emptyBox = document.createElement('div'); emptyBox.className='empty';
     emptyBox.style.textAlign = 'left';
     emptyBox.innerHTML = `
-      <div style="font-size:16px;font-weight:600;color:var(--text-main);margin-bottom:4px;">✨ ยังไม่มีวันฝึกของคุณ</div>
-      <div style="font-size:13px;color:var(--text-muted);">คุณสามารถพิมพ์สร้างวันใหม่ด้านบน หรือเลือก **ตารางฝึกสำเร็จรูป (Presets)** ด้านล่างนี้เพื่อสร้างโปรแกรมพร้อมท่าให้ทันทีใน 1 คลิก!</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+        <div>
+          <div style="font-size:16px;font-weight:600;color:var(--text-main);margin-bottom:2px;">✨ ยังไม่มีวันฝึกของคุณ</div>
+          <div style="font-size:13px;color:var(--text-muted);">เลือก **ตารางฝึกสำเร็จรูป** ด้านล่าง หรือใช้ **ระบบแนะนำเฉพาะบุคคล** ด้านขวาเพื่อจัดตารางที่ตรงกับคุณที่สุด!</div>
+        </div>
+        <button class="btn-recommend" id="emptyQuizBtn">🤖 ทำแบบสอบถามแนะนำโปรแกรมเฉพาะคุณ</button>
+      </div>
       
       <div class="preset-grid">
         ${PRESETS.map((p, i) => `
@@ -1757,6 +2236,7 @@ function renderSchedule(){
       </div>
     `;
     schedView.appendChild(emptyBox);
+    document.getElementById('emptyQuizBtn').addEventListener('click', openQuizModal);
     return;
   }
 
