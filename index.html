@@ -1466,7 +1466,7 @@ function openPicker(day){
   pickerSearch.focus();
 }
 document.getElementById('pickerClose').addEventListener('click', ()=> pickerOverlay.classList.remove('open'));
-pickerOverlay.addEventListener('click', e=>{ if(e.target===pickerOverlay) pickerOverlay.classList.remove('open')); });
+pickerOverlay.addEventListener('click', e=>{ if(e.target===pickerOverlay) pickerOverlay.classList.remove('open'); });
 pickerSearch.addEventListener('input', paintPicker);
 
 function paintPicker(){
