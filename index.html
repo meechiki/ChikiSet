@@ -375,7 +375,7 @@ h1 span {
   box-shadow: var(--shadow-sm);
 }
 
-/* Organic Precise Calibrated Container */
+/* Clean Aesthetics Container */
 .blue-anatomy-container {
   position: relative;
   width: 100%;
@@ -405,27 +405,28 @@ h1 span {
   height: 100%;
 }
 
+/* Clean Invisible Outlines by default, Elegant Glow on Hover & Active */
 .hotspot-path {
-  fill: rgba(2, 132, 199, 0.08);
-  stroke: rgba(255, 50, 50, 0.75);
-  stroke-width: 1.8;
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 1.5;
   stroke-linejoin: round;
   cursor: pointer;
   transition: var(--transition-smooth);
 }
 
 .hotspot-path:hover {
-  fill: rgba(255, 94, 58, 0.45);
-  stroke: #ff3232;
-  stroke-width: 2.4;
-  filter: drop-shadow(0 0 8px rgba(255, 50, 50, 0.85));
+  fill: rgba(2, 132, 199, 0.35);
+  stroke: rgba(2, 132, 199, 0.85);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 8px rgba(2, 132, 199, 0.7));
 }
 
 .hotspot-path.active {
-  fill: rgba(255, 94, 58, 0.65);
-  stroke: #ff2222;
-  stroke-width: 3;
-  filter: drop-shadow(0 0 12px rgba(255, 34, 34, 0.95));
+  fill: rgba(255, 94, 58, 0.55);
+  stroke: #ff5e3a;
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 10px rgba(255, 94, 58, 0.9));
 }
 
 .active-muscle-badge {
