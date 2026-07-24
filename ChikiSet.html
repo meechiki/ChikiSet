@@ -257,34 +257,62 @@ h1 span {
   border-bottom-color: var(--accent-primary);
 }
 
-.tabs {
+/* Hierarchical Two-Tier Category Filter System */
+.group-tabs {
   display: flex; gap: 5px; overflow-x: auto;
-  padding: 8px 0 2px; scrollbar-width: none;
+  padding: 8px 0 4px; scrollbar-width: none;
   max-width: 1280px; margin: 0 auto;
 }
 
-.tabs::-webkit-scrollbar { display: none; }
+.group-tabs::-webkit-scrollbar { display: none; }
 
-.tab {
+.group-chip {
   flex: none;
-  font-size: 12px; font-weight: 500;
-  background: var(--panel-bg);
+  font-size: 12.5px; font-weight: 600;
+  background: var(--panel-solid);
   border: 1px solid var(--border-line);
   color: var(--text-muted);
-  padding: 4px 11px;
+  padding: 4px 12px;
   border-radius: var(--radius-full);
   cursor: pointer;
   white-space: nowrap;
-  backdrop-filter: var(--glass-blur);
   transition: var(--transition-smooth);
 }
 
-.tab.active {
-  background: var(--accent-gradient);
+.group-chip.active {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #ffffff;
+  box-shadow: 0 3px 10px var(--accent-glow);
+}
+
+.sub-tabs {
+  display: flex; gap: 5px; overflow-x: auto;
+  padding: 2px 0 6px; scrollbar-width: none;
+  max-width: 1280px; margin: 0 auto;
+}
+
+.sub-tabs::-webkit-scrollbar { display: none; }
+
+.sub-chip {
+  flex: none;
+  font-size: 11.5px; font-weight: 500;
+  background: var(--panel-sub);
+  border: 1px solid var(--border-line);
+  color: var(--text-muted);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition-smooth);
+}
+
+.sub-chip.active {
+  background: var(--accent-orange-grad);
   border-color: transparent;
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 3px 10px var(--accent-glow);
+  box-shadow: 0 2px 8px rgba(255, 94, 58, 0.3);
 }
 
 /* Layout Wrapper for Zero Scroll */
@@ -307,7 +335,7 @@ h1 span {
 
 /* Left Scrollable Exercise List */
 #library-list-col {
-  max-height: calc(100vh - 165px);
+  max-height: calc(100vh - 195px);
   overflow-y: auto;
   padding-right: 6px;
 }
@@ -317,7 +345,7 @@ h1 span {
 /* Eye-Level Zero-Scroll 3D Muscle Panel */
 .anatomy-panel {
   position: sticky;
-  top: 105px;
+  top: 135px;
   background: var(--panel-bg);
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-color);
@@ -325,7 +353,7 @@ h1 span {
   padding: 12px;
   box-shadow: var(--shadow-md);
   text-align: center;
-  max-height: calc(100vh - 120px);
+  max-height: calc(100vh - 145px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -381,8 +409,8 @@ h1 span {
   width: 100%;
   max-width: 220px;
   margin: 0 auto;
-  max-height: calc(100vh - 215px);
-  height: 420px;
+  max-height: calc(100vh - 240px);
+  height: 400px;
   border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--panel-sub);
@@ -632,7 +660,6 @@ h1 span {
   box-shadow: 0 0 0 3px var(--accent-subtle);
 }
 
-/* Preset Template Quick-Create Section */
 .template-section {
   margin-top: 14px;
   padding-top: 14px;
@@ -677,7 +704,6 @@ h1 span {
   color: var(--accent-primary);
 }
 
-/* Big Preset Template Cards for Empty State */
 .preset-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -705,24 +731,9 @@ h1 span {
   box-shadow: var(--shadow-md);
 }
 
-.preset-icon {
-  font-size: 24px;
-  margin-bottom: 6px;
-}
-
-.preset-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-main);
-  margin-bottom: 3px;
-}
-
-.preset-desc {
-  font-size: 12px;
-  color: var(--text-muted);
-  line-height: 1.4;
-  margin-bottom: 12px;
-}
+.preset-icon { font-size: 24px; margin-bottom: 6px; }
+.preset-name { font-size: 15px; font-weight: 600; color: var(--text-main); margin-bottom: 3px; }
+.preset-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px; }
 
 .preset-btn {
   font-family: 'Kanit', sans-serif;
@@ -900,8 +911,9 @@ footer { max-width: 1280px; margin: 20px auto 0; padding: 0 16px; color: var(--t
     </div>
   </div>
 
-  <!-- Horizontal Filter Chips Bar -->
-  <div class="tabs" id="tabs"></div>
+  <!-- Hierarchical Two-Tier Category Filter Chips Bar -->
+  <div class="group-tabs" id="groupTabs"></div>
+  <div class="sub-tabs" id="subTabs"></div>
 </header>
 
 <div class="wrap">
@@ -1053,7 +1065,80 @@ footer { max-width: 1280px; margin: 20px auto 0; padding: 0 16px; color: var(--t
 </div>
 
 <script>
-/* ---------- Database ---------- */
+/* ---------- Hierarchical Category Database ---------- */
+const CATEGORY_GROUPS = [
+  {
+    id: "ALL",
+    name: "ทั้งหมด (All)",
+    subs: []
+  },
+  {
+    id: "ARMS",
+    name: "1. แขน (Arms)",
+    subs: [
+      { name: "1.1 ไบเซ็ป (Biceps)", key: "ไบเซ็ป (Biceps)" },
+      { name: "1.2 ไตรเซ็ป (Triceps)", key: "ไตรเซ็ป (Triceps)" },
+      { name: "1.3 ปลายแขน (Forearms)", key: "ปลายแขน (Forearms)" }
+    ]
+  },
+  {
+    id: "CHEST",
+    name: "2. อก (Chest)",
+    subs: [
+      { name: "2.1 อกบน (Upper Chest)", key: "อกบน (Upper Chest)" },
+      { name: "2.2 อกกลาง (Chest)", key: "อก (Chest)" },
+      { name: "2.3 อกล่าง (Lower Chest)", key: "อกล่าง (Lower Chest)" }
+    ]
+  },
+  {
+    id: "BACK",
+    name: "3. หลัง (Back)",
+    subs: [
+      { name: "3.1 สะบัก/คอ (Traps)", key: "สะบัก (Traps)" },
+      { name: "3.2 หลังบน (Upper Back)", key: "หลังบน (Upper Back)" },
+      { name: "3.3 ปีก (Lats)", key: "ปีก (Lats)" },
+      { name: "3.4 หลังล่าง (Lower Back)", key: "หลังล่าง (Lower Back)" }
+    ]
+  },
+  {
+    id: "SHOULDERS",
+    name: "4. ไหล่ (Shoulders)",
+    subs: [
+      { name: "4.1 ไหล่หน้า (Front Delts)", key: "ไหล่หน้า (Front Delts)" },
+      { name: "4.2 ไหล่ข้าง (Side Delts)", key: "ไหล่ข้าง (Side Delts)" },
+      { name: "4.3 ไหล่หลัง (Rear Delts)", key: "ไหล่หลัง (Rear Delts)" }
+    ]
+  },
+  {
+    id: "CORE",
+    name: "5. หน้าท้อง/แกนกลาง (Core)",
+    subs: [
+      { name: "5.1 หน้าท้องตรงกลาง (Abs/Core)", key: "แกนกลางลำตัว (Abs/Core)" },
+      { name: "5.2 หน้าท้องข้าง (Obliques)", key: "หน้าท้องข้าง (Obliques)" }
+    ]
+  },
+  {
+    id: "LEGS",
+    name: "6. ขา & สะโพก (Legs)",
+    subs: [
+      { name: "6.1 ต้นขาหน้า (Quads)", key: "ต้นขาหน้า (Quads)" },
+      { name: "6.2 ต้นขาหลัง (Hamstrings)", key: "ต้นขาหลัง (Hamstrings)" },
+      { name: "6.3 ต้นขาด้านใน (Hip Adduction)", key: "ต้นขาด้านใน (Hip Adduction)" },
+      { name: "6.4 สะโพก (Glutes)", key: "สะโพก (Glutes)" },
+      { name: "6.5 สะโพกด้านข้าง (Hip Abduction)", key: "สะโพกด้านข้าง (Hip Abduction)" },
+      { name: "6.6 น่อง (Calves)", key: "น่อง (Calves)" }
+    ]
+  },
+  {
+    id: "OTHER",
+    name: "7. อื่นๆ (Other)",
+    subs: [
+      { name: "7.1 คาร์ดิโอ/พลัยโอ (Cardio)", key: "คาร์ดิโอ/พลัยโอ (Cardio & Plyo)" },
+      { name: "7.2 โอลิมปิก/พลัง (Power)", key: "โอลิมปิก/พลัง (Olympic & Power)" }
+    ]
+  }
+];
+
 const DB = {
 "อกบน (Upper Chest)": [
   ["Incline Barbell Bench Press","บาร์เบล"],["Incline Dumbbell Press","ดัมเบล"],
@@ -1288,43 +1373,80 @@ document.querySelectorAll('.main-tab').forEach(t=>{
     const v = t.dataset.view;
     document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
     document.getElementById('view-'+v).classList.add('active');
-    document.getElementById('tabs').style.display = v==='library' ? 'flex' : 'none';
+    document.getElementById('groupTabs').style.display = v==='library' ? 'flex' : 'none';
+    document.getElementById('subTabs').style.display = v==='library' ? 'flex' : 'none';
     document.querySelector('.search-wrap').style.display = v==='library' ? 'block' : 'none';
   });
 });
 
 /* ================= LIBRARY VIEW ================= */
-const tabsEl = document.getElementById('tabs');
+const groupTabsEl = document.getElementById('groupTabs');
+const subTabsEl = document.getElementById('subTabs');
 const libView = document.getElementById('library-list-col');
-const cats = Object.keys(DB);
+
+let activeGroupId = 'ALL';
 let activeCat = 'ALL';
 
-const allTab = document.createElement('div');
-allTab.className='tab active'; allTab.textContent='ทั้งหมด'; allTab.dataset.cat='ALL';
-tabsEl.appendChild(allTab);
-cats.forEach(c=>{
-  const t = document.createElement('div');
-  t.className='tab'; t.textContent = c.split(' (')[0]; t.dataset.cat=c;
-  tabsEl.appendChild(t);
-});
-tabsEl.addEventListener('click', e=>{
-  const t = e.target.closest('.tab'); if(!t) return;
-  selectCategory(t.dataset.cat);
-});
-document.getElementById('search').addEventListener('input', renderLibrary);
-
-function selectCategory(catName) {
-  activeCat = catName;
-  document.querySelectorAll('.tab').forEach(x => {
-    x.classList.toggle('active', x.dataset.cat === activeCat);
+function renderHierarchicalFilterUI() {
+  groupTabsEl.innerHTML = '';
+  CATEGORY_GROUPS.forEach(g => {
+    const chip = document.createElement('div');
+    chip.className = 'group-chip' + (g.id === activeGroupId ? ' active' : '');
+    chip.textContent = g.name;
+    chip.addEventListener('click', () => {
+      activeGroupId = g.id;
+      if (g.id === 'ALL') {
+        activeCat = 'ALL';
+      } else if (g.subs.length > 0) {
+        activeCat = g.subs[0].key;
+      }
+      renderHierarchicalFilterUI();
+      selectCategory(activeCat, false);
+    });
+    groupTabsEl.appendChild(chip);
   });
-  
+
+  subTabsEl.innerHTML = '';
+  const currentGroup = CATEGORY_GROUPS.find(g => g.id === activeGroupId);
+  if (currentGroup && currentGroup.subs.length > 0) {
+    subTabsEl.style.display = 'flex';
+    currentGroup.subs.forEach(s => {
+      const schip = document.createElement('div');
+      schip.className = 'sub-chip' + (s.key === activeCat ? ' active' : '');
+      schip.textContent = s.name;
+      schip.addEventListener('click', () => {
+        selectCategory(s.key, true);
+      });
+      subTabsEl.appendChild(schip);
+    });
+  } else {
+    subTabsEl.style.display = 'none';
+  }
+}
+
+function selectCategory(catName, updateGroup = true) {
+  activeCat = catName;
+
+  if (updateGroup && catName !== 'ALL') {
+    for (const g of CATEGORY_GROUPS) {
+      const match = g.subs.find(s => s.key === catName);
+      if (match) {
+        activeGroupId = g.id;
+        break;
+      }
+    }
+  } else if (catName === 'ALL') {
+    activeGroupId = 'ALL';
+  }
+
+  renderHierarchicalFilterUI();
+
   document.querySelectorAll('.hotspot-path').forEach(p => {
     p.classList.toggle('active', p.dataset.cat === activeCat);
   });
 
   const badgeText = document.getElementById('activeMuscleText');
-  if(badgeText) {
+  if (badgeText) {
     badgeText.textContent = activeCat === 'ALL' ? 'แสดงทุกหมวดหมู่' : activeCat;
   }
 
@@ -1335,16 +1457,19 @@ function renderLibrary(){
   const q = document.getElementById('search').value.trim().toLowerCase();
   libView.innerHTML = '';
   let any = false;
-  cats.forEach(cat=>{
-    if(activeCat!=='ALL' && activeCat!==cat) return;
-    const exs = DB[cat].filter(([name])=> !q || name.toLowerCase().includes(q));
-    if(exs.length===0) return;
+
+  const catsToRender = Object.keys(DB);
+
+  catsToRender.forEach(cat => {
+    if (activeCat !== 'ALL' && activeCat !== cat) return;
+    const exs = DB[cat].filter(([name]) => !q || name.toLowerCase().includes(q));
+    if (exs.length === 0) return;
     any = true;
-    const h = document.createElement('div'); h.className='cat-title'; h.textContent = cat;
+    const h = document.createElement('div'); h.className = 'cat-title'; h.textContent = cat;
     libView.appendChild(h);
-    exs.forEach(([name,eq])=> libView.appendChild(buildExCard(cat,name,eq)));
+    exs.forEach(([name, eq]) => libView.appendChild(buildExCard(cat, name, eq)));
   });
-  if(!any) libView.innerHTML = '<div class="empty">ไม่พบท่าออกกำลังกายที่คุณค้นหา ลองคำอื่นดูครับ</div>';
+  if (!any) libView.innerHTML = '<div class="empty">ไม่พบท่าออกกำลังกายที่คุณค้นหา ลองคำอื่นดูครับ</div>';
 }
 
 function buildExCard(cat,name,eq){
@@ -1392,6 +1517,8 @@ function buildExCard(cat,name,eq){
   });
   return card;
 }
+
+renderHierarchicalFilterUI();
 renderLibrary();
 
 /* ---------- 3D Blue Model Hotspots & Toggle ---------- */
@@ -1417,9 +1544,11 @@ btnBack.addEventListener('click', () => {
 document.querySelectorAll('.hotspot-path').forEach(path => {
   path.addEventListener('click', () => {
     const cat = path.dataset.cat;
-    selectCategory(cat);
+    selectCategory(cat, true);
   });
 });
+
+document.getElementById('search').addEventListener('input', renderLibrary);
 
 /* ================= HEADER REST TIMER ================= */
 let headerSec = 90, headerRunning = false, headerTimerHandle = null;
@@ -1506,7 +1635,6 @@ function createQuickDay(nameStr) {
 function renderSchedule(){
   schedView.innerHTML = '';
   
-  // Toolbar Section
   const toolbar = document.createElement('div'); toolbar.className='sched-toolbar';
   toolbar.innerHTML = `
     <div class="new-day-form">
@@ -1540,7 +1668,6 @@ function renderSchedule(){
     });
   });
 
-  // Empty State with Preset Program Cards
   if(schedule.length===0){
     const emptyBox = document.createElement('div'); emptyBox.className='empty';
     emptyBox.style.textAlign = 'left';
