@@ -820,9 +820,13 @@ footer { max-width: 1280px; margin: 20px auto 0; padding: 0 16px; color: var(--t
             <path class="hotspot-path" data-cat="หลังบน (Upper Back/Traps)" d="M 145 140 C 120 155 105 170 85 180 L 125 185 L 155 160 Z" title="คอ/สะบัก (Traps)"/>
             <path class="hotspot-path" data-cat="หลังบน (Upper Back/Traps)" d="M 235 140 C 260 155 275 170 295 180 L 255 185 L 225 160 Z" title="คอ/สะบัก (Traps)"/>
 
-            <!-- Chest (อก) -->
-            <path class="hotspot-path" data-cat="อก (Chest)" d="M 125 185 L 188 185 C 188 235 185 262 135 260 C 115 255 110 220 125 185 Z" title="อก (Chest)"/>
-            <path class="hotspot-path" data-cat="อก (Chest)" d="M 255 185 L 192 185 C 192 235 195 262 245 260 C 265 255 270 220 255 185 Z" title="อก (Chest)"/>
+            <!-- Upper Chest (อกบน) -->
+            <path class="hotspot-path" data-cat="อกบน (Upper Chest)" d="M 125 185 L 188 185 L 188 220 L 120 220 Z" title="อกบน (Upper Chest)"/>
+            <path class="hotspot-path" data-cat="อกบน (Upper Chest)" d="M 255 185 L 192 185 L 192 220 L 260 220 Z" title="อกบน (Upper Chest)"/>
+
+            <!-- Lower Chest (อกล่าง) -->
+            <path class="hotspot-path" data-cat="อกล่าง (Lower Chest)" d="M 120 222 L 188 222 L 188 260 C 140 262 115 255 120 222 Z" title="อกล่าง (Lower Chest)"/>
+            <path class="hotspot-path" data-cat="อกล่าง (Lower Chest)" d="M 260 222 L 192 222 L 192 260 C 240 262 265 255 260 222 Z" title="อกล่าง (Lower Chest)"/>
 
             <!-- Shoulders / Front Delts (ไหล่หน้า) -->
             <path class="hotspot-path" data-cat="ไหล่หน้า (Front Delts)" d="M 85 180 C 65 185 55 205 60 235 C 70 255 90 260 115 250 C 130 220 120 195 85 180 Z" title="ไหล่หน้า (Front Delts)"/>
@@ -844,15 +848,20 @@ footer { max-width: 1280px; margin: 20px auto 0; padding: 0 16px; color: var(--t
             <path class="hotspot-path" data-cat="ปลายแขน (Forearms)" d="M 42 345 C 28 375 20 430 32 490 C 45 500 62 485 58 435 C 52 385 55 360 42 345 Z" title="ปลายแขน (Forearms)"/>
             <path class="hotspot-path" data-cat="ปลายแขน (Forearms)" d="M 338 345 C 352 375 360 430 348 490 C 335 500 318 485 322 435 C 328 385 325 360 338 345 Z" title="ปลายแขน (Forearms)"/>
 
-            <!-- Abs / Core (หน้าท้อง 6-Pack & แกนกลาง) -->
-            <path class="hotspot-path" data-cat="แกนกลางลำตัว (Abs/Core)" d="M 130 265 L 250 265 C 255 330 250 410 235 460 C 190 480 145 460 145 460 C 130 410 125 330 130 265 Z" title="หน้าท้อง/แกนกลาง (Abs/Core)"/>
+            <!-- Abs / Core Center (หน้าท้องตรงกลาง 6-Pack) -->
+            <path class="hotspot-path" data-cat="แกนกลางลำตัว (Abs/Core)" d="M 148 265 L 232 265 C 235 330 232 410 220 455 C 190 470 160 470 160 455 C 148 410 145 330 148 265 Z" title="หน้าท้อง/แกนกลาง (Abs/Core)"/>
+
+            <!-- Obliques Left & Right (หน้าท้องข้าง / เอวข้าง) -->
+            <path class="hotspot-path" data-cat="หน้าท้องข้าง (Obliques)" d="M 130 270 L 146 270 C 144 330 158 410 144 455 C 125 430 118 350 130 270 Z" title="หน้าท้องข้าง (Obliques)"/>
+            <path class="hotspot-path" data-cat="หน้าท้องข้าง (Obliques)" d="M 250 270 L 234 270 C 236 330 222 410 236 455 C 255 430 262 350 250 270 Z" title="หน้าท้องข้าง (Obliques)"/>
 
             <!-- Hip Abduction (สะโพกด้านข้าง / Gluteus Medius / Tensor Fasciae Latae) -->
             <path class="hotspot-path" data-cat="สะโพกด้านข้าง (Hip Abduction)" d="M 115 440 C 95 450 85 480 88 520 L 115 500 Z" title="สะโพกด้านข้าง (Hip Abduction)"/>
             <path class="hotspot-path" data-cat="สะโพกด้านข้าง (Hip Abduction)" d="M 265 440 C 285 450 295 480 292 520 L 265 500 Z" title="สะโพกด้านข้าง (Hip Abduction)"/>
 
-            <!-- Hip Adduction (ต้นขาด้านใน / Adductors) -->
-            <path class="hotspot-path" data-cat="ต้นขาด้านใน (Hip Adduction)" d="M 172 490 L 190 490 L 182 600 L 175 600 Z" title="ต้นขาด้านใน (Hip Adduction)"/>
+            <!-- Hip Adduction Inner Thighs BOTH Left & Right Legs (ต้นขาด้านใน มีทั้ง 2 ฝั่ง ขาซ้ายและขวา!) -->
+            <path class="hotspot-path" data-cat="ต้นขาด้านใน (Hip Adduction)" d="M 172 490 L 184 490 L 178 610 L 168 600 Z" title="ต้นขาด้านในซ้าย (Hip Adduction)"/>
+            <path class="hotspot-path" data-cat="ต้นขาด้านใน (Hip Adduction)" d="M 208 490 L 196 490 L 202 610 L 212 600 Z" title="ต้นขาด้านในขวา (Hip Adduction)"/>
 
             <!-- Quads / Thighs (ต้นขาหน้า) -->
             <path class="hotspot-path" data-cat="ต้นขาหน้า (Quads)" d="M 132 468 C 112 490 95 530 92 630 C 95 720 120 765 142 765 C 165 765 174 720 174 630 L 168 495 Z" title="ต้นขาหน้า (Quads)"/>
@@ -930,12 +939,20 @@ footer { max-width: 1280px; margin: 20px auto 0; padding: 0 16px; color: var(--t
 <script>
 /* ---------- Database ---------- */
 const DB = {
+"อกบน (Upper Chest)": [
+  ["Incline Barbell Bench Press","บาร์เบล"],["Incline Dumbbell Press","ดัมเบล"],
+  ["Incline Dumbbell Fly","ดัมเบล"],["Low-to-High Cable Fly","เคเบิล"],
+  ["Incline Push-Up","น้ำหนักตัว"]
+],
+"อกล่าง (Lower Chest)": [
+  ["Decline Barbell Bench Press","บาร์เบล"],["Decline Dumbbell Press","ดัมเบล"],
+  ["Dips (Chest-focused)","น้ำหนักตัว"],["High-to-Low Cable Fly","เคเบิล"],
+  ["Decline Push-Up","น้ำหนักตัว"]
+],
 "อก (Chest)": [
-  ["Barbell Bench Press","บาร์เบล"],["Incline Barbell Bench Press","บาร์เบล"],
-  ["Decline Bench Press","บาร์เบล"],["Dumbbell Bench Press","ดัมเบล"],
-  ["Incline Dumbbell Press","ดัมเบล"],["Dumbbell Fly","ดัมเบล"],
-  ["Cable Crossover","เคเบิล"],["Pec Deck Machine","เครื่อง"],
-  ["Push-Up","น้ำหนักตัว"],["Dips (Chest-focused)","น้ำหนักตัว"]
+  ["Barbell Bench Press","บาร์เบล"],["Dumbbell Bench Press","ดัมเบล"],
+  ["Dumbbell Fly","ดัมเบล"],["Cable Crossover","เคเบิล"],
+  ["Pec Deck Machine","เครื่อง"],["Push-Up","น้ำหนักตัว"]
 ],
 "หลังบน (Upper Back/Traps)": [
   ["Barbell Row","บาร์เบล"],["Pendlay Row","บาร์เบล"],["T-Bar Row","เครื่อง"],
@@ -974,8 +991,12 @@ const DB = {
 ],
 "แกนกลางลำตัว (Abs/Core)": [
   ["Plank","น้ำหนักตัว"],["Crunch","น้ำหนักตัว"],["Sit-Up","น้ำหนักตัว"],
-  ["Hanging Leg Raise","บาร์โหน"],["Cable Crunch","เคเบิล"],["Russian Twist","น้ำหนักตัว/ดัมเบล"],
-  ["Ab Wheel Rollout","ล้อเอบ"]
+  ["Hanging Leg Raise","บาร์โหน"],["Cable Crunch","เคเบิล"],["Ab Wheel Rollout","ล้อเอบ"]
+],
+"หน้าท้องข้าง (Obliques)": [
+  ["Russian Twist","น้ำหนักตัว/ดัมเบล"],["Side Plank","น้ำหนักตัว"],
+  ["Bicycle Crunch","น้ำหนักตัว"],["Cable Woodchopper","เคเบิล"],
+  ["Hanging Side Leg Raise","บาร์โหน"]
 ],
 "ต้นขาหน้า (Quads)": [
   ["Back Squat","บาร์เบล"],["Front Squat","บาร์เบล"],["Leg Press","เครื่อง"],
@@ -1459,8 +1480,9 @@ function paintPicker(){
       btn.textContent='เพิ่มแล้ว'; btn.disabled=true;
       renderSchedule();
       setTimeout(()=>{
-        const cards = document.querySelectorAll('.day-card');
-        cards.forEach(c=>{ if(c.querySelector('.day-name').textContent===pickerTargetDay.name) c.classList.add('open'); });
+        const cards = document.createElement('div');
+        const allCards = document.querySelectorAll('.day-card');
+        allCards.forEach(c=>{ if(c.querySelector('.day-name').textContent===pickerTargetDay.name) c.classList.add('open'); });
       },0);
     });
     pickerList.appendChild(row);
